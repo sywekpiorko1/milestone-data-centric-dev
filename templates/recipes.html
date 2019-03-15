@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+
+        <h3>Recipes list:</h3>
+    {% for recipe in recipes %}
+        <h5>{{recipe.meal}}</h5>
+        <h5>{{recipe.category}}</h5>
+        <h5>{{recipe.instructions}}</h5>
+        <h5>{{recipe.author}}</h5>
+        <h5>{{recipe.views}}</h5>
+        <h5>{{recipe.upvotes}}</h5>
+        <h5>{{recipe.upvotes_who}}</h5>
+        <h5>{{recipe.allergens}}</h5>
+        <h5>{{recipe.cuisine}}</h5>
+        <h5>{{recipe.youtube}}</h5>
+        <h5>{{recipe.photo}}</h5>
+    {% endfor %}
+            
+        <h3>Allergens list</h3>
+    {% for allergen in allergens %}
+        <h5>{{allergen.allergen_name}}</h5>
+    {% endfor %}
+            
+        <h3>Cuisine list</h3>
+    {% for cuisine_one in cuisine %}
+        <h5>{{cuisine_one.cuisine_name}}</h5>
+    {% endfor %}
+        
+{% endblock %}
