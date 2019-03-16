@@ -29,24 +29,25 @@ def get_recipes():
 
 
 # Backup collections (by CI Miro_lead)
-# @app.route('/backup')
-# def do_backup_to_json_file():
-#     # This will be the JSON
-#     backup = {}
-#     # Your collections goes here
-#     data = [recipes_collection.find(), allergens_collection.find(),
-# 		cuisine_collection.find()]
+@app.route('/backup')
+def do_backup_to_json_file():
+    # This will be the JSON
+    backup = {}
+    # Your collections goes here
+    data = [recipes_collection.find(), allergens_collection.find(),
+		cuisine_collection.find()]
 
-#     for collection in data:
-# 	    # Create new list in the dict with key like '1' for example
-# 	    backup[f'{len(backup) + 1}'] = []
-# 	    for x in collection:
-# 		    del x['_id']
-# 		    # Add the document to the key ... 
-# 		    backup[f'{len(backup)}'].append(x)
-
-# print(backup)
-
+    for collection in data:
+	    # Create new list in the dict with key like '1' for example
+	    print(len(backup))
+	   # backup[f'{len(backup) + 1}'] = []
+	    for x in collection:
+		    del x['_id']
+		    # Add the document to the key ... 
+		  #  backup[f'{len(backup)}'].append(x)
+    
+    # print(backup)
+    return "Bakup done!"
 # with open('backup.json', 'w') as outfile:
 # 	json.dump(backup, outfile)
 	

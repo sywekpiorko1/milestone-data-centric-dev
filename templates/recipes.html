@@ -1,29 +1,76 @@
-{% extends 'base.html' %}
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 
-        <h3>Recipes list:</h3>
-    {% for recipe in recipes %}
-        <h5>{{recipe.meal}}</h5>
-        <h5>{{recipe.category}}</h5>
-        <h5>{{recipe.instructions}}</h5>
-        <h5>{{recipe.author}}</h5>
-        <h5>{{recipe.views}}</h5>
-        <h5>{{recipe.upvotes}}</h5>
-        <h5>{{recipe.upvotes_who}}</h5>
-        <h5>{{recipe.allergens}}</h5>
-        <h5>{{recipe.cuisine}}</h5>
-        <h5>{{recipe.youtube}}</h5>
-        <h5>{{recipe.photo}}</h5>
-    {% endfor %}
-            
-        <h3>Allergens list</h3>
-    {% for allergen in allergens %}
-        <h5>{{allergen.allergen_name}}</h5>
-    {% endfor %}
-            
-        <h3>Cuisine list</h3>
-    {% for cuisine_one in cuisine %}
-        <h5>{{cuisine_one.cuisine_name}}</h5>
-    {% endfor %}
-        
-{% endblock %}
+
+<!--<h3>Recipes list:</h3>-->
+{% for recipe in recipes %}
+
+<!--<p>{{recipe.meal}}</p>-->
+<!--<p>{{recipe.category}}</p>-->
+<!--<p>{{recipe.instructions}}</p>-->
+<!--<p>{{recipe.author}}</p>-->
+<!--<p>{{recipe.views}}</p>-->
+<!--<p>{{recipe.upvotes}}</p>-->
+<!--<p>{{recipe.upvotes_who}}</p>-->
+<!--<p>{{recipe.allergens}}</p>-->
+<!--<p>{{recipe.cuisine}}</p>-->
+<!--<p>{{recipe.youtube}}</p>-->
+<!--<p>{{recipe.photo}}</p>-->
+
+<div class="row">
+    <div class="col s12 m6 l4">
+        <div class="card z-depth-3">
+            <div class="card-image circle waves-effect waves-block waves-light">
+                <img class="activator" src="{{recipe.photo}}">
+            </div>
+            <div class="card-content">
+
+                <span class="card-title activator grey-text text-darken-4 center-align"><h4>{{recipe.meal}}</h4></span>
+                <span>
+                    <a class="btn-floating pulse red"><i class="large material-icons">arrow_forward</i></a>
+                    </span>
+                <span>
+                    <a class="btn-floating right"><i class="material-icons">edit</i></a>
+                </span>
+
+                <!--<p><a href="#">Edit</a></p>-->
+            </div>
+            <div class="card-reveal">
+                <span class="card-title grey-text text-darken-4">{{recipe.meal}}<i class="material-icons right">close</i></span>
+                <p>{{recipe.instructions}}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col s12 m6 l4">
+    <div class="card horizontal z-depth-3">
+        <div class="card-image">
+            <img src="{{recipe.photo}}">
+        </div>
+        <div class="card-stacked">
+            <div class="card-content">
+                <h4 class="header">{{recipe.meal}}</h2>
+                    <p>{{recipe.instructions}}</p>
+            </div>
+            <div class="card-action">
+                <a href="#">Edit</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endfor %}
+
+<!--<h3>Allergens list</h3>-->
+<!--{% for allergen in allergens %}-->
+<!--<p>{{allergen.allergen_name}}</p>-->
+<!--{% endfor %}-->
+
+<!--<h3>Cuisine list</h3>-->
+<!--{% for cuisine_one in cuisine %}-->
+<!--<p>{{cuisine_one.cuisine_name}}</p>-->
+<!--{% endfor %}-->
+
+
+
+{% endblock content%}
