@@ -26,7 +26,7 @@
 
                 <span class="card-title activator grey-text text-darken-4 center-align"><h4>{{recipe.meal}}</h4></span>
                 <span>
-                    <a class="btn-floating pulse red"><i class="large material-icons">arrow_forward</i></a>
+                    <a href="{{ url_for('view_recipe', recipe_id=recipe._id) }}" class="btn-floating pulse red"><i class="large material-icons">arrow_forward</i></a>
                     </span>
                 <span>
                     <a class="btn-floating right"><i class="material-icons">edit</i></a>

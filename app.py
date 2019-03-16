@@ -26,6 +26,11 @@ def get_recipes():
     return render_template("recipes.html", recipes=recipes_collection.find(),
                             allergens=allergens_collection.find(),
                             cuisine=cuisine_collection.find())
+                            
+@app.route('/viewRecipe/<recipe_id>')
+def view_recipe(recipe_id):
+    recipe = recipes_collection.find_one({"_id": ObjectId(recipe_id)})
+    return render_template("recipeView.html", recipe=recipe)
 
 
 # Backup collections (by CI Miro_lead)
