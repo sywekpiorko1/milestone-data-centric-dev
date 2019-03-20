@@ -33,37 +33,6 @@ def view_recipe(recipe_id):
     return render_template("recipeView.html", recipe=recipe)
 
 
-# Backup collections (by CI Miro_lead)
-@app.route('/backup')
-def do_backup_to_json_file():
-    # This will be the JSON
-    backup = {}
-    # Your collections goes here
-    data = [recipes_collection.find(), allergens_collection.find(),
-		cuisine_collection.find()]
-
-    for collection in data:
-	    # Create new list in the dict with key like '1' for example
-	    print(len(backup))
-	   # backup[f'{len(backup) + 1}'] = []
-	    for x in collection:
-		    del x['_id']
-		    # Add the document to the key ... 
-		  #  backup[f'{len(backup)}'].append(x)
-    
-    # print(backup)
-    return "Bakup done!"
-# with open('backup.json', 'w') as outfile:
-# 	json.dump(backup, outfile)
-	
-# At the end you will end up with something like 
-"""
-{
-	'1' : [document,document, document, document],
-	'2' : [document,document, document, document],	
-	'3' : [document,document, document, document]
-}
-"""
 
 if __name__ == '__main__':
     app.run(host=os.environ.get('IP'),

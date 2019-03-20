@@ -7,7 +7,11 @@
 
 {{recipe.meal}}
 
-{{recipe.ingredients}}
+{% for ingredient in recipe.ingredients %}
+
+<p>{{ingredient}}</p>
+
+{% endfor %}
 
 {{recipe.cuisine}}
 
