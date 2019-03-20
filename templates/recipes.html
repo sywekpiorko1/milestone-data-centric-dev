@@ -1,22 +1,8 @@
 {% extends 'base.html' %} {% block content %}
 
 
-<!--<h3>Recipes list:</h3>-->
-{% for recipe in recipes %}
-
-<!--<p>{{recipe.meal}}</p>-->
-<!--<p>{{recipe.category}}</p>-->
-<!--<p>{{recipe.instructions}}</p>-->
-<!--<p>{{recipe.author}}</p>-->
-<!--<p>{{recipe.views}}</p>-->
-<!--<p>{{recipe.upvotes}}</p>-->
-<!--<p>{{recipe.upvotes_who}}</p>-->
-<!--<p>{{recipe.allergens}}</p>-->
-<!--<p>{{recipe.cuisine}}</p>-->
-<!--<p>{{recipe.youtube}}</p>-->
-<!--<p>{{recipe.photo}}</p>-->
-
 <div class="row">
+        {% for recipe in recipes %}
     <div class="col s12 m6 l4">
         <div class="card z-depth-3">
             <div class="card-image circle waves-effect waves-block waves-light">
@@ -40,36 +26,8 @@
             </div>
         </div>
     </div>
+    {% endfor %}
 </div>
-
-<div class="col s12 m6 l4">
-    <div class="card horizontal z-depth-3">
-        <div class="card-image">
-            <img src="{{recipe.photo}}">
-        </div>
-        <div class="card-stacked">
-            <div class="card-content">
-                <h4 class="header">{{recipe.meal}}</h2>
-                    <p>{{recipe.instructions}}</p>
-            </div>
-            <div class="card-action">
-                <a href="#">Edit</a>
-            </div>
-        </div>
-    </div>
-</div>
-
-{% endfor %}
-
-<!--<h3>Allergens list</h3>-->
-<!--{% for allergen in allergens %}-->
-<!--<p>{{allergen.allergen_name}}</p>-->
-<!--{% endfor %}-->
-
-<!--<h3>Cuisine list</h3>-->
-<!--{% for cuisine_one in cuisine %}-->
-<!--<p>{{cuisine_one.cuisine_name}}</p>-->
-<!--{% endfor %}-->
 
 
 
