@@ -19,19 +19,36 @@ recipes_collection = mongo.db.recipes_collection
 allergens_collection = mongo.db.allergens_collection
 cuisine_collection = mongo.db.cuisine_collection
 
-# Main routes 
+######################################################################
+#                             RECIPES
+######################################################################
 @app.route('/')
 @app.route('/recipes')
 def get_recipes():
-    return render_template("recipes.html", recipes=recipes_collection.find(),
+    return render_template("recipes.html", 
+                            recipes=recipes_collection.find(),
                             allergens=allergens_collection.find(),
                             cuisine=cuisine_collection.find())
-                            
+
+
+@app.route('/addRecipe')
+def add_recipe():
+    _allergens = allergens_collection.find()
+    allergen_list = [allergen for allergen in _allergens]
+    _cuisines = cuisine_collection.find()
+    cuisine_list = [cuisine for cuisine in _cuisines]
+    return render_template('add_recipe.html',
+                            allergens=allergen_list,
+                            cuisines=cuisine_list)
+
+# {{ url_for('insert_recipe') }}
+
+
 @app.route('/viewRecipe/<recipe_id>')
 def view_recipe(recipe_id):
     recipe = recipes_collection.find_one({"_id": ObjectId(recipe_id)})
-    return render_template("recipeView.html", recipe=recipe)
-
+    return render_template("view_recipe.html", 
+                            recipe=recipe)
 
 
 if __name__ == '__main__':
