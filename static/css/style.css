@@ -1,0 +1,19 @@
+[type="checkbox"].filled-in:checked + label:not(.lever):after {
+ 
+    top: 0;
+   
+    width: 20px;
+   
+    height: 20px;
+   
+    border: 2px solid #5e0101;
+   
+    background-color: #fc0000;
+   
+    z-index: 0;
+   
+  }
+
+  .padded-from-left {
+    padding-left: 2rem
+  }
