@@ -143,7 +143,7 @@ def admin():
             return redirect(url_for('get_recipes'))
     else:
         print("else in admin route ....")
-        flash('You must be logged')
+        flash('You must be logged in!')
         return redirect(url_for('get_recipes'))
 
 ######################################################################
@@ -181,7 +181,7 @@ def insert_recipe():
     form_request_to_dict = request.form.to_dict()
     # as allergens collected from checboxes add them to list
     form_request_to_dict['allergens'] = request.form.getlist('allergens')
-    # split ingredients to create list of them
+    # split ingredients to create list
     form_request_to_dict['ingredients'] = form_request_to_dict['ingredients'].split(",")    
     # add keys to dictionary to be used when searching and sorting
     form_request_to_dict['views'] = 0
