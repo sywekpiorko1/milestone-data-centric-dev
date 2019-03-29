@@ -2,6 +2,7 @@
 <html>
 
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=0.86, maximum-scale=3.0, minimum-scale=0.86">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css" />
   <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}" type="text/css" />
@@ -13,10 +14,13 @@
   <header>
     <nav class="navbar">
       <div class="nav-wrapper black">
-        <a href="{{ url_for('get_recipes') }}" class="brand-logo center">Online Cookbook</a>
+        <a href="{{ url_for('index') }}" class="brand-logo left" style="padding-left: 50px">Cookbook</a>
         <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
         <ul class="right hide-on-med-and-down">
+          <li><a href="{{ url_for('search_recipes') }}">SEARCH</a></li>
+          <li><a href="{{ url_for('get_recipes') }}">ALL RECIPES</a></li>
           {% if session.user %}
+          <li><a href="{{ url_for('add_recipe') }}">ADD RECIPE</a></li>
           <li class="{% if 'profile' in request.path %} active {% endif %}"><a
               href="{{url_for('profile', user=session.user)}}">Profile</a></li>
           <li><a href="{{url_for('logout')}}">Logout</a></li>
@@ -32,7 +36,10 @@
         </ul>
         <!--  ########################  Navbar/mobile ###########################   -->
         <ul class="side-nav" id="mobile-demo">
+          <li><a href="{{ url_for('search_recipes') }}">SEARCH</a></li>
+          <li><a href="{{ url_for('get_recipes') }}">ALL RECIPES</a></li>
           {% if session.user %}
+          <li><a href="{{ url_for('add_recipe') }}">ADD RECIPE</a></li>
           <li class="{% if 'profile' in request.path %} active {% endif %}"><a
               href="{{url_for('profile', user=session.user)}}">Profile</a></li>
           <li><a href="{{url_for('logout')}}">Logout</a></li>
@@ -47,6 +54,7 @@
           {% endif %}
         </ul>
       </div>
+    </nav>
   </header>
   <!--  ########################  Flashed messages ###########################   -->
   <div id="alerts">
@@ -60,10 +68,9 @@
       {% endwith %}
     </div>
   </div>
-  </nav>
   <!--  ########################  Main content ###########################   -->
   <main>
-    {% block content %} {% endblock %}
+    {% block main_content %} {% endblock %}
   </main>
   <!--  ########################  Footer ###########################   -->
   <footer class="page-footer black">
@@ -87,6 +94,7 @@
       $('.collapsible').collapsible();
       $('select').material_select();
       $(".button-collapse").sideNav();
+      $('.materialboxed').materialbox();
     });
     $('.datepicker').pickadate({
       selectMonths: true, // Creates a dropdown to control month

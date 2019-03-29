@@ -1,5 +1,5 @@
-{% extends 'base.html' %} {% block content %}
-<div class="container-wide">
+{% extends 'base.html' %} {% block main_content %}
+<div class="container-wide" style="margin-top: 20px">
   <div class="row">
     <form action="{{ url_for('insert_recipe') }}" method="POST" class="col s12">
 
@@ -28,7 +28,7 @@
       <div class="row">
         <div class="input-field col s12 m6">
           <i class="material-icons prefix">face</i>
-          <input id="author" name="author" type="text" class="validate" required>
+          <input id="author" name="author" type="text" value="{{ author_passed_in.username }}" disabled>
           <label for="icon_prefix">Author</label>
         </div>
         <div class="input-field col s12 m6">
@@ -42,21 +42,6 @@
           <label>Cuisine</label>
         </div>
       </div>
-
-      <!-- <div class="row"> -->
-      <!--                              NUMBER OF VIEWS -->
-      <!-- <div class="input-field col s12 l6">
-        <i class="material-icons prefix">visibility</i>
-        <input id="views" name="views" type="text" class="validate">
-        <label for="icon_prefix">Views (insert 0 for testing)</label>
-      </div> -->
-      <!--                              NUMBER OF UPVOTES -->
-      <!-- <div class="input-field col s12 l6">
-        <i class="material-icons prefix">thumb_up</i>
-        <input id="upvotes" name="upvotes" type="text" class="validate">
-        <label for="icon_prefix">Upvotes (insert 0 for testing)</label>
-      </div>
-    </div> -->
 
       <!--                              INGREDIENTS -->
       <div class="row">
@@ -120,4 +105,4 @@
     </form>
   </div>
 </div>
-{% endblock %}
+{% endblock main_content %}
