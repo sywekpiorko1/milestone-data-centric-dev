@@ -7,32 +7,32 @@
     <form action="{{ url_for('search_recipes') }}" method="POST" class="input-field col s12">
       <div class="input-field col s12">
         <i class="material-icons prefix">local_dining</i>
-        <input id="icon_prefix" type="text" class="validate">
+        <input id="icon_prefix" type="text" class="validate" disabled>
         <label for="icon_prefix">search by meal name</label>
+      </div>
+      
+      <div class="input-field col s12">
+        <i class="material-icons prefix">category</i>
+        <select id="category" name="category">
+          <option value="" disabled selected>Choose Category</option>
+          {% for category in categories %}
+          <option value="{{category.category_name}}">{{category.category_name}}</option>
+          {% endfor %}
+        </select>
+        <label>Search in Categories</label>
       </div>
 
       <div class="input-field col s12">
         <i class="material-icons prefix">flag</i>
-        <select multiple id="cuisine" name="cuisine">
-          <option value="" disabled selected>... OR clause ...</option>
-          {% for cuis in cuisine %}
-          <option value="{{cuis.cuisine_name}}">{{cuis.cuisine_name}}</option>
+        <select id="cuisine" name="cuisine">
+          <option value="" disabled selected>Choose Cuisine</option>
+          {% for cuisine in cuisines %}
+          <option value="{{cuisine.cuisine_name}}">{{cuisine.cuisine_name}}</option>
           {% endfor %}
         </select>
-        <label>Search for Cuisine</label>
+        <label>Search in Cuisines</label>
       </div>
-
-      <div class="input-field col s12">
-        <i class="material-icons prefix">category</i>
-        <select multiple id="category" name="category">
-          <option value="" disabled selected>... OR clause ...</option>
-          {% for categ in category %}
-          <option value="{{categ.category_name}}">{{categ.category_name}}</option>
-          {% endfor %}
-        </select>
-        <label>Search for Category</label>
-      </div>
-
+      
       <div class="row right-align">
         <button class="btn btn-large waves-seffect waves-light grey darken-4 z-depth-3" type="submit"
           name="action">Search
@@ -45,7 +45,7 @@
 
   <div class="row">
     <!-- {{ recipes }} -->
-    Found {{ recipes|length }} recipes:
+    <h6>Found <strong>{{ recipes|length }}</strong> recipe(s) for {{ filters|length }} filter(s) such as {{ filters }}.</h6>
     <hr>
     {% for x in recipes %}
     {{x}}

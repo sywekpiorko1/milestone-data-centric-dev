@@ -49,11 +49,11 @@ def get_recipes():
 def search_recipes():
     if request.method == 'POST':
         form = request.form.to_dict()
-        # Create list of values for Cuisine and Category multiselection
-        if len(request.form.getlist('cuisine')) > 0:
-            form['cuisine'] = request.form.getlist('cuisine')
-        if len(request.form.getlist('category')) > 0:
-            form['category'] = request.form.getlist('category')
+        # # Create list of values for Cuisine and Category multiselection
+        # if len(request.form.getlist('cuisine')) > 0:
+        #     form['cuisine'] = request.form.getlist('cuisine')
+        # if len(request.form.getlist('category')) > 0:
+        #     form['category'] = request.form.getlist('category')
         # remove action key from dictionary
         if 'action' in form:
             del form['action']
@@ -65,21 +65,19 @@ def search_recipes():
         # Create a temporary list for stoing the filters
         filters = list()
         # Loop through each of the keys from form
-        for key in form:
-            # Loop through list of values
-            for value in form[key]:
-                print(key, " ", value)
-                # Create temporary dictionary to which will be our single filter
-                # Each filter MUST be a valid dictionary
-                search_filter = dict()
-                # Create new k,v pars in above dictionary
-                # {"cuisines" : "asian"}
-                search_filter[key] = value
-                # Append then new created filter to our list of filters
-                filters.append(search_filter)
-                print("print(search_filter)"),
-                print(search_filter)
-                # should be for ex. {'cuisine': 'Greek'}
+        for key in form:        
+            print(key, " ", form[key])
+            # Create temporary dictionary to which will be our single filter
+            # Each filter MUST be a valid dictionary
+            search_filter = dict()
+            # Create new k,v pars in above dictionary
+            # {"cuisines" : "asian"}
+            search_filter[key] = form[key]
+            # Append then new created filter to our list of filters
+            filters.append(search_filter)
+            print("print(search_filter)"),
+            print(search_filter)
+            # should be for ex. {'cuisine': 'Greek'}
 
         # Create single query with 1 or more filters
         print("print(filters)"),
@@ -91,7 +89,7 @@ def search_recipes():
             recipes = recipes_collection.aggregate([
                 {
                     "$match": {
-                        "$or": filters
+                        "$and": filters
                     }
                 }
             ])
@@ -100,11 +98,12 @@ def search_recipes():
             flash("Choose something before search!")
 
         return render_template('search.html', recipes=list(recipes),
-                               cuisine=cuisine_collection.find(),
-                               category=category_collection.find())
+                               cuisines=cuisine_collection.find(),
+                               categories=category_collection.find(),
+                               filters=filters)
     return render_template('search.html',
-                           cuisine=cuisine_collection.find(),
-                           category=category_collection.find())
+                           cuisines=cuisine_collection.find(),
+                           categories=category_collection.find())
 
 
 @app.route('/addRecipe')
