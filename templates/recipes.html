@@ -2,7 +2,7 @@
 
 <div class="container">
 
-    <h1 class="center-align">Recipes</h1>
+  <h1 class="center-align">Recipes</h1>
 
   {% for recipe in recipes %}
 
@@ -31,6 +31,9 @@
           class="material-icons">grade</i></a>
       <a href="{{ url_for('view_recipe', recipe_id=recipe._id) }}" title="View"
         class="ngl btn-floating waves-effect waves-light purple lighten-4"><i class="material-icons">zoom_in</i></a>
+      {% if viewer == recipe.author or viewer == 'admin' %}
+      <a href="{{ url_for('edit_recipe', recipe_id=recipe._id) }}" title="Edit" class="ngl2 btn-floating waves-effect waves-light yellow"><i class="material-icons">edit</i></a>
+      {% endif %}
     </li>
   </ul>
 

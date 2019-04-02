@@ -45,7 +45,7 @@
 
   <div class="row">
     <!-- {{ recipes }} -->
-    <h6>Found <strong>{{ recipes|length }}</strong> recipe(s) for {{ filters|length }} filter(s) such as {{ filters }}.</h6>
+    <h6>Found <strong>{{ recipes|length }}</strong> recipe(s) for {{ filters|length }} filter(s) such as MATCH:AND:{{ filters }}.</h6>
     <hr>
     {% for x in recipes %}
     {{x}}

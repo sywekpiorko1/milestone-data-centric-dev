@@ -133,8 +133,16 @@ main {
   height: 120px;
 }
 
+/* Buttons (view and edit) in all_recipe view of each separate recipe */
+
 .ngl {
   position: absolute;
-  top: 50px;
+  top: 55px;
+  right: 7px;
+}
+
+.ngl2 {
+  position: absolute;
+  top: 110px;
   right: 7px;
 }

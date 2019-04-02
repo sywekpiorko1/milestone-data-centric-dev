@@ -7,6 +7,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import json
 import pprint
 
+
 app = Flask(__name__)
 
 # MongoDB config
@@ -23,6 +24,11 @@ recipes_collection = mongo.db.recipes_collection
 allergens_collection = mongo.db.allergens_collection
 cuisine_collection = mongo.db.cuisine_collection
 
+# global variables used to share data between edit_recipe and update_recipe
+author_global = "None!"
+views_global = 0
+upvotes_global = 0
+upvotes_who_global = []
 
 @app.route('/')
 @app.route('/index')
@@ -37,24 +43,25 @@ def index():
 
 @app.route('/recipes')
 def get_recipes():
+    viewer = 'anonim'
+    if 'user' in session:
+        user_in_db = users_collection.find_one({"username": session['user']})
+        if user_in_db:
+            viewer = user_in_db['username']
+    flash(viewer)
     return render_template("recipes.html",
                            title="Recipes",
                            recipes=recipes_collection.find(),
                            allergens=allergens_collection.find(),
                            cuisine=cuisine_collection.find(),
-                           category=category_collection.find())
+                           category=category_collection.find(),
+                           viewer=viewer)
 
 
 @app.route('/searchRecipes', methods=['GET', 'POST'])
 def search_recipes():
     if request.method == 'POST':
         form = request.form.to_dict()
-        # # Create list of values for Cuisine and Category multiselection
-        # if len(request.form.getlist('cuisine')) > 0:
-        #     form['cuisine'] = request.form.getlist('cuisine')
-        # if len(request.form.getlist('category')) > 0:
-        #     form['category'] = request.form.getlist('category')
-        # remove action key from dictionary
         if 'action' in form:
             del form['action']
 
@@ -140,8 +147,7 @@ def insert_recipe():
     # as allergens collected from checboxes add them to list
     form_request_to_dict['allergens'] = request.form.getlist('allergens')
     # split ingredients to create list
-    form_request_to_dict['ingredients'] = form_request_to_dict['ingredients'].split(
-        ",")
+    form_request_to_dict['ingredients'] = form_request_to_dict['ingredients'].split(",")
     # add keys to dictionary to be used when searching and sorting
     form_request_to_dict['views'] = 0
     form_request_to_dict['upvotes'] = 0
@@ -154,6 +160,80 @@ def insert_recipe():
     recipes = recipes_collection
     recipes.insert_one(form_request_to_dict)
 
+    return redirect(url_for('get_recipes'))
+
+
+@app.route('/editRecipe/<recipe_id>')
+def edit_recipe(recipe_id):
+            # Check if user is logged in
+    if 'user' in session:
+        user_in_db = users_collection.find_one({"username": session['user']})
+        if user_in_db:
+            the_recipe = recipes_collection.find_one({"_id": ObjectId(recipe_id)})
+            global author_global
+            author_global = the_recipe['author']
+            if user_in_db['username'] == author_global or user_in_db['username'] == 'admin':
+                global views_global
+                views_global = the_recipe['views']
+                global upvotes_global
+                upvotes_global = the_recipe['upvotes']
+                global upvotes_who_global
+                upvotes_who_global = list(the_recipe['upvotes_who'])
+
+                pp.pprint(the_recipe)
+
+                _categories = category_collection.find()
+                category_list = [category for category in _categories]
+                ingredients_list_to_string = (','.join(the_recipe['ingredients']))
+                _allergens = allergens_collection.find()
+                allergen_list = [allergen for allergen in _allergens]
+                _cuisines = cuisine_collection.find()
+                cuisine_list = [cuisine for cuisine in _cuisines]
+                return render_template('edit_recipe.html',
+                                        recipe=the_recipe,
+                                        title="Edit Recipe",
+                                        categories=category_list,
+                                        ingredients_string=ingredients_list_to_string,
+                                        allergens=allergen_list,
+                                        cuisines=cuisine_list,
+                                        author_passed_in=author_global)
+            else:
+                # user is not an author or admin
+                flash("user is not an author!")
+                return redirect(url_for('get_recipes'))
+        else:
+            # user in session but not in database
+            flash("Your session name is not in databse!")
+            return redirect(url_for('get_recipes'))
+    else:
+        # Render the page for user to be able to log in
+        flash("Please log in first!")
+        return redirect(url_for('get_recipes'))
+        
+
+@app.route('/updateRecipe/<recipe_id>', methods=['POST'])
+def update_recipe(recipe_id):
+    form_request_to_dict = request.form.to_dict()
+    form_request_to_dict['ingredients'] = form_request_to_dict['ingredients'].split(",")
+    # pp.pprint(form_request_to_dict)
+    
+    # update =( {'_id': ObjectId(recipe_id)},
+    recipes_collection.update( {'_id': ObjectId(recipe_id)},
+    {
+        'meal':request.form.get('meal'),
+        'category':request.form.get('category'),
+        'author':author_global,
+        'upvotes':upvotes_global,
+        'views':views_global,
+        'upvotes_who':upvotes_who_global,
+        'cuisine':request.form.get('cuisine'),
+        'ingredients':list(request.form.get('ingredients').split(",")),
+        'instructions':request.form.get('instructions'),
+        'allergens':request.form.getlist('allergens'),
+        'youtube':request.form.get('youtube'),
+        'photo':request.form.get('photo')
+    } ) 
+    # pp.pprint(update)
     return redirect(url_for('get_recipes'))
 
 
