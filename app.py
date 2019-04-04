@@ -33,7 +33,8 @@ upvotes_who_global = []
 @app.route('/')
 @app.route('/index')
 def index():
-    return render_template("index.html")
+    return render_template("index.html",
+                            title="COOKBOOK")
 
 
 ######################################################################
@@ -49,9 +50,11 @@ def get_recipes():
         if user_in_db:
             viewer = user_in_db['username']
     flash(viewer)
+    recipes = list(recipes_collection.find())
     return render_template("recipes.html",
-                           title="Recipes",
-                           recipes=recipes_collection.find(),
+                           title="ALL Recipes",
+                           recipes=recipes,
+                           count=len(recipes),
                            allergens=allergens_collection.find(),
                            cuisine=cuisine_collection.find(),
                            category=category_collection.find(),
@@ -60,17 +63,27 @@ def get_recipes():
 
 @app.route('/searchRecipes', methods=['GET', 'POST'])
 def search_recipes():
+    viewer = 'anonim'
+    _categories = category_collection.find()
+    category_list = [category for category in _categories]
+    _cuisines = cuisine_collection.find()
+    cuisine_list = [cuisine for cuisine in _cuisines]
+    _allergens = allergens_collection.find()
+    allergen_list = [allergen for allergen in _allergens]
+    
+    if 'user' in session:
+        viewer = session['user']
+    flash(viewer)
     if request.method == 'POST':
         form = request.form.to_dict()
         if 'action' in form:
             del form['action']
+        if 'allergens' in form:
+            form['allergens'] = request.form.getlist('allergens')
 
-        # debug
-        print("pp.pprint(form)"),
-        pp.pprint(form)
-
-        # Create a temporary list for stoing the filters
+        # Create a temporary list for storing the filters
         filters = list()
+        exclusion = list()
         # Loop through each of the keys from form
         for key in form:        
             print(key, " ", form[key])
@@ -79,38 +92,95 @@ def search_recipes():
             search_filter = dict()
             # Create new k,v pars in above dictionary
             # {"cuisines" : "asian"}
-            search_filter[key] = form[key]
-            # Append then new created filter to our list of filters
-            filters.append(search_filter)
-            print("print(search_filter)"),
-            print(search_filter)
-            # should be for ex. {'cuisine': 'Greek'}
+            if key == 'allergens':
+                items = form[key]
+                for item in items:
+                    # print(item)                
+                    # exclusion_filter = dict()
+                    # exclusion_filter[key] = item
+                    exclusion.append(item)
+                    # exclusion.append(exclusion_filter)
+            else:
+                search_filter[key] = form[key]
+                # Append then new created filter to our list of filters
+                filters.append(search_filter)
 
         # Create single query with 1 or more filters
-        print("print(filters)"),
-        print(filters)
         # should be like format: [{'cuisine': 'Greek'}, {'category': 'Seafood'}]
 
         # Warning if no selection made
-        if filters:
-            recipes = recipes_collection.aggregate([
+
+        if filters or exclusion:
+            recipes_with_allowed_allergens = list(recipes_collection.aggregate([
                 {
                     "$match": {
-                        "$and": filters
+                        "$and": [{'allergens': { "$nin": exclusion}}]
                     }
                 }
-            ])
-        else:
-            recipes = {}
-            flash("Choose something before search!")
+            ]))
+            if filters:
+                recipes_filtered = list(recipes_collection.aggregate([
+                    {
+                        "$match": {
+                            "$and": filters       
+                        }
+                    }
+                ]))
+                print("print(filters)"),
+                print(filters)
+                print("count of recipes_filtered")
+                print(len(recipes_filtered))
 
-        return render_template('search.html', recipes=list(recipes),
-                               cuisines=cuisine_collection.find(),
-                               categories=category_collection.find(),
-                               filters=filters)
+            print("print(exclusion)"),
+            print(exclusion)
+            print("count of recipes_with_allowed_allergens")
+            print(len(recipes_with_allowed_allergens))
+            
+            filtered_and_excluded_allergens = []
+            
+            if filters:
+                for item in recipes_with_allowed_allergens:
+                    if item in recipes_filtered:
+                        filtered_and_excluded_allergens.append(item)
+            else:
+                filtered_and_excluded_allergens = recipes_with_allowed_allergens
+
+            print("filtered_and_excluded_allergens"); (len(filtered_and_excluded_allergens))
+
+            # for item in recipes_filtered:
+
+            # print (recipes_filtered.count())
+            
+            # print (recipes_filtered)
+            
+            # recipes = dict(recipes_filtered.aggregate([
+            #     {
+            #         "$match": {'allergens': { "$nin": exclusion}}
+            #         }
+            # ]))
+
+            
+            return render_template("recipes.html",
+                                title="Filtered Recipes",
+                                recipes=filtered_and_excluded_allergens,
+                                count=len(filtered_and_excluded_allergens),
+                                allergens=allergens_collection.find(),
+                                cuisine=cuisine_collection.find(),
+                                category=category_collection.find(),
+                                viewer=viewer)
+        else:
+            flash("Choose something before search!")
+            return render_template('search.html',
+                                title="Search again",
+                                allergens=allergen_list,
+                                cuisines=cuisine_collection.find(),
+                                categories=category_collection.find())
+
     return render_template('search.html',
-                           cuisines=cuisine_collection.find(),
-                           categories=category_collection.find())
+                           title="Search",
+                           allergens=allergen_list, 
+                           cuisines=cuisine_list,
+                           categories=category_list)
 
 
 @app.route('/addRecipe')

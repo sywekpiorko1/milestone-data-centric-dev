@@ -48,7 +48,7 @@
         <div class="input-field col s12">
           <i class="material-icons prefix">scatter_plot</i>
           <!-- <input id="ingredients" name="ingredients" type="text" class="validate" required> -->
-          <textarea id="ingredients" name="ingredients" class="materialize-textarea validate" required></textarea>
+          <textarea id="textarea1" name="ingredients" class="materialize-textarea validate" required></textarea>
           <label for="icon_prefix">Ingredients (seperated by commas)</label>
         </div>
       </div>
@@ -57,7 +57,7 @@
       <div class="row">
         <div class="input-field col s12">
           <i class="material-icons prefix">format_list_numbered</i>
-          <textarea id="instructions" name="instructions" class="materialize-textarea validate" required></textarea>
+          <textarea id="textarea2" name="instructions" class="materialize-textarea validate" required></textarea>
           <label for="icon_telephone">Preparation Instructions</label>
         </div>
       </div>
@@ -73,8 +73,7 @@
         <div class="col offset-s2">
           {% for allergen in allergens %}
           <div class="col s12 m6">
-            <input name="allergens" value="{{allergen.allergen_name}}" type="checkbox" class="filled-in"
-              id="{{allergen.allergen_name}}" />
+            <input name="allergens" value="{{allergen.allergen_name}}" type="checkbox" class="filled-in" id="{{allergen.allergen_name}}" />
             <label for="{{allergen.allergen_name}}">{{allergen.allergen_name}}</label>
           </div>
           {% endfor %}

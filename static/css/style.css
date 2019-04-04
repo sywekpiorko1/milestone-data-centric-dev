@@ -22,6 +22,12 @@ main {
   flex: 1 0 auto;
 }
 
+/* NAVBAR */
+
+.nav-wrapper>ul>li:hover {
+  background-color: orange;
+}
+
 .margin-up {
   margin-top: 1rem;
 }
@@ -64,7 +70,9 @@ main {
   margin-bottom: 20px;
 }
 
-                                      /* https://www.jquery-az.com/5-styles-materialize-checkbox-custom-checkedunchecked/ */
+/* Checkboxes */
+
+/* https://www.jquery-az.com/5-styles-materialize-checkbox-custom-checkedunchecked/ */
 
 [type="checkbox"].filled-in:checked+label:not(.lever):after {
   top: 0;
@@ -75,42 +83,9 @@ main {
   z-index: 0;
 }
 
-/* nav ul li.active {
-    background-color: rgba(175, 144, 233, 0.952);
-    border: 1px solid rgba(175, 144, 233, 0.952);
-  } */
-
-/* nav.navbar-fixed {
-  background: white;
-  border: none;
-  box-shadow: none;
-  height: 70px;
+.fixed label {
+  pointer-events: auto;
 }
-
-.navbar-fixed .nav-wrapper {
-  background: white;
-  margin: 20px;
-}
-
-.navbar-fixed .nav-wrapper>ul>li>a {
-  color: #faa61a;
-}
-
-.navbar-fixed .nav-wrapper>ul>li>a:hover {
-  color: white;
-}
-
-.navbar-fixed .nav-wrapper>ul>li:hover {
-  background-color: #faa61a;
-}
-
-.navbar-fixed .nav-wrapper .brand-logo img {
-  height: 45px;
-}
-
-.navbar-fixed .nav-wrapper .button-collapse i {
-  color: black;
-} */
 
 /* Flashed messages */
 
@@ -145,4 +120,10 @@ main {
   position: absolute;
   top: 110px;
   right: 7px;
+}
+
+/* Footer */
+
+footer p {
+  color: white;
 }

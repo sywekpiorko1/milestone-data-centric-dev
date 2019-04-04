@@ -5,16 +5,32 @@
 <div class="container-wide z-depth-3">
   <div class="row">
     <form action="{{ url_for('search_recipes') }}" method="POST" class="input-field col s12">
-      <div class="input-field col s12">
-        <i class="material-icons prefix">local_dining</i>
-        <input id="icon_prefix" type="text" class="validate" disabled>
-        <label for="icon_prefix">search by meal name</label>
+
+      <!--                              ALLERGENS CHECKBOXES -->
+      <div class="row">
+        <div class="row">
+          <div class="col">
+            <i class="small material-icons prefix">warning</i>
+            <span class="padded-from-left red-text"><strong> AVOID FOLLOWING ALLERGENS in results</strong></span>
+          </div>
+        </div>
+        <div class="col offset-s2">
+          {% for allergen in allergens %}
+          <div class="col s12 m6">
+            <input name="allergens" value="{{allergen.allergen_name}}" type="checkbox" class="filled-in" id="{{allergen.allergen_name}}"/>
+            <label for="{{allergen.allergen_name}}">{{allergen.allergen_name}}</label>
+          </div>
+          {% endfor %}
+        </div>
       </div>
+      <!--                              WORD IN INGREDIENTS -->
+
       
+      <!--                              CATEGORY FROM LIST -->
       <div class="input-field col s12">
         <i class="material-icons prefix">category</i>
         <select id="category" name="category">
-          <option value="" disabled selected>Choose Category</option>
+          <option value="" disabled selected>ALL Categories</option>
           {% for category in categories %}
           <option value="{{category.category_name}}">{{category.category_name}}</option>
           {% endfor %}
@@ -22,17 +38,18 @@
         <label>Search in Categories</label>
       </div>
 
+      <!--                                CUISINE FROM LIST -->
       <div class="input-field col s12">
         <i class="material-icons prefix">flag</i>
         <select id="cuisine" name="cuisine">
-          <option value="" disabled selected>Choose Cuisine</option>
+          <option value="" disabled selected>ALL Cuisines</option>
           {% for cuisine in cuisines %}
           <option value="{{cuisine.cuisine_name}}">{{cuisine.cuisine_name}}</option>
           {% endfor %}
         </select>
         <label>Search in Cuisines</label>
       </div>
-      
+
       <div class="row right-align">
         <button class="btn btn-large waves-seffect waves-light grey darken-4 z-depth-3" type="submit"
           name="action">Search
@@ -41,17 +58,5 @@
       </div>
     </form>
   </div>
-
-
-  <div class="row">
-    <!-- {{ recipes }} -->
-    <h6>Found <strong>{{ recipes|length }}</strong> recipe(s) for {{ filters|length }} filter(s) such as MATCH:AND:{{ filters }}.</h6>
-    <hr>
-    {% for x in recipes %}
-    {{x}}
-    <hr>
-    {% endfor %}
-  </div>
-</div>
 
 {% endblock main_content %}
