@@ -1,7 +1,5 @@
 requirements_old.txt
 env.py
-miros_doc_backup.py
-pull_json_from_themealdb.py
 json/
 
 

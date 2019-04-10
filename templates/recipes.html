@@ -15,42 +15,25 @@
     in ours database.</h3>
   {% endif %}
 
+  <ul class="pagination center-align">
+    {% if p_offset > 0 %}
+    <li class="waves-effect"><a href="{{ prev_url }}"><i class="material-icons">chevron_left</i></a></li>
+    {% endif %}
+    <!-- <li class="active"><a href="#!">1</a></li>
+    <li class="waves-effect"><a href="#!">2</a></li>
+    <li class="waves-effect"><a href="#!">3</a></li>
+    <li class="waves-effect"><a href="#!">4</a></li>
+    <li class="waves-effect"><a href="#!">5</a></li> -->
+    {% if p_offset + p_limit <  count %}
+    <li class="waves-effect"><a href="{{ next_url }}"><i class="material-icons">chevron_right</i></a></li>
+    {% endif %}
+  </ul>
+
   {% for recipe in recipes %}
 
-  <ul class="collection z-depth-3">
-    <li class="collection-item avatar" style="padding-left: 110px">
-      <img src="{{recipe.photo}}" alt="{{recipe.meal}}" class="circle materialboxed">
-      <h3 class="teal-text center-align">{{recipe.meal}}</h3>
-      <span class="indigo-text" style="padding-left: 5rem">Cuisine: {{recipe.cuisine}}</span>
-      <span class="light-blue-text" style="padding-left: 5rem">Author: {{recipe.author}}</span>
-      <span class="orange-text" style="padding-left: 5rem">Category: {{recipe.category}}</span>
-      <div class="row" style="padding-top: 10px">
-        <div class="col s12 m6">
-          <h5><i>Ingredients:</i></h5>
-          {% for ingredient in recipe.ingredients %}
-          <h6><strong>{{loop.index}}:</strong>&nbsp;&nbsp;{{ ingredient }}</h6>
-          {% endfor %}
-        </div>
-        <div class="col s12 m6">
-          <h5 class="red-text"><i>Allergens:</i></h5>
-          {% for allergen in recipe.allergens %}
-          <h6 class="red-text"><strong>{{loop.index}}:</strong>&nbsp;&nbsp;{{ allergen }}</h6>
-          {% endfor %}
-        </div>
-      </div>
-      <a href="{{ url_for('view_recipe', recipe_id=recipe._id) }}" class="secondary-content"><i
-          class="material-icons">grade</i></a>
-      <a href="{{ url_for('view_recipe', recipe_id=recipe._id) }}" title="View"
-        class="ngl btn-floating waves-effect waves-light purple lighten-4"><i class="material-icons">zoom_in</i></a>
-      {% if viewer == recipe.author or viewer == 'admin' %}
-      <a href="{{ url_for('edit_recipe', recipe_id=recipe._id) }}" title="Edit"
-        class="ngl2 btn-floating waves-effect waves-light yellow"><i class="material-icons">edit</i></a>
-      {% endif %}
-    </li>
-  </ul>
+  {% include "recipesTemplate.html"  %}
 
   {% endfor %}
 
-</div>
 
-{% endblock main_content %}
+  {% endblock main_content %}

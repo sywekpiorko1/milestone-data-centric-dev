@@ -1,5 +1,31 @@
 {% extends 'base.html' %} {% block main_content %}
 
-<h1>Welcome {{ user.username|title }}</h1>
+<div class="row">
+  <div>
+    <h1>Welcome {{ user.username }}</h1>
+  </div>
+  {% if profile_user_recipes %}
+  <div>
+    <ul>
+      <h5><strong>Created Recipes:</strong></h5> 
+      {% for recipe in profile_user_recipes %}
+      <li>&nbsp;&nbsp;{{ recipe.meal }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  {% if upvoted_recipes %}
+  <div>
+    <ul>
+      <h5><strong>Liked Recipes:</strong></h5>
+      {% for recipe in upvoted_recipes %}
+      <li>&nbsp;&nbsp;{{ recipe.meal }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+</div>
+
 
 {% endblock main_content %}

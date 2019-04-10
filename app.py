@@ -6,6 +6,7 @@ from bson.objectid import ObjectId
 from werkzeug.security import generate_password_hash, check_password_hash
 import json
 import pprint
+from operator import itemgetter
 
 
 app = Flask(__name__)
@@ -21,6 +22,7 @@ pp = pprint.PrettyPrinter(indent=4)
 users_collection = mongo.db.users_collection
 category_collection = mongo.db.category_collection
 recipes_collection = mongo.db.recipes_collection
+deleted_recipes_collection = mongo.db.deleted_recipes_collection
 allergens_collection = mongo.db.allergens_collection
 cuisine_collection = mongo.db.cuisine_collection
 
@@ -29,6 +31,14 @@ author_global = "None!"
 views_global = 0
 upvotes_global = 0
 upvotes_who_global = []
+filtered_and_excluded_allergens = []
+p_limit = 4
+
+
+######################################################################
+#                             RECIPES
+######################################################################
+
 
 @app.route('/')
 @app.route('/index')
@@ -37,43 +47,132 @@ def index():
                             title="COOKBOOK")
 
 
-######################################################################
-#                             RECIPES
-######################################################################
-
-
 @app.route('/recipes')
 def get_recipes():
     viewer = 'anonim'
     if 'user' in session:
         user_in_db = users_collection.find_one({"username": session['user']})
+        print (user_in_db)
         if user_in_db:
             viewer = user_in_db['username']
-    flash(viewer)
-    recipes = list(recipes_collection.find())
+    # flash(viewer)
+
+    # Pagination
+
+	# Request the limit from link
+    p_limit = int(request.args['limit'])
+
+	# Request the offset from link
+    # make sure is 0 or more to avoid erver error	
+    p_offset = int(request.args['offset'])
+    if p_offset < 0:
+        p_offset = 0
+    # make sure  is not bigger or equal than recipes count
+    recipes_total = recipes_collection.find().count()
+    if p_offset > recipes_total:
+        p_offset = recipes_total
+
+    recipes = list(recipes_collection.find().sort('_id').limit(p_limit).skip(p_offset))
     return render_template("recipes.html",
-                           title="ALL Recipes",
-                           recipes=recipes,
-                           count=len(recipes),
-                           allergens=allergens_collection.find(),
-                           cuisine=cuisine_collection.find(),
-                           category=category_collection.find(),
-                           viewer=viewer)
+                            allergens=allergens_collection.find(),
+                            category=category_collection.find(),
+                            count=recipes_total,
+                            cuisine=cuisine_collection.find(),
+                            next_url=f"/recipes?limit={str(p_limit)}&offset={str(p_offset + p_limit)}",
+                            p_limit=p_limit,
+                            p_offset=p_offset,
+                            prev_url=f"/recipes?limit={str(p_limit)}&offset={str(p_offset - p_limit)}",
+                            recipes=recipes,
+                            title="ALL Recipes",
+                            viewer=viewer)
+
+
+@app.route('/viewRecipe/<recipe_id>')
+def view_recipe(recipe_id):
+    viewer = 'anonim'
+    if 'user' in session:
+        user_in_db = users_collection.find_one({"username": session['user']})
+        if user_in_db:
+            viewer = user_in_db['username']
+    # flash(viewer)
+    recipe = recipes_collection.find_one({"_id": ObjectId(recipe_id)})
+    # Add and update (+1) to recipe.views
+    views = recipe['views']
+    views += 1
+    recipes_collection.update( {'_id': ObjectId(recipe_id)},{"$set":{'views':views}}) 
+    upvotes_who = list(recipe['upvotes_who'])
+    if viewer in upvotes_who:
+        voted_up_by_viewer = True
+    else:
+        voted_up_by_viewer = False
+
+    print(voted_up_by_viewer)
+    return render_template("view_recipe.html",
+                            recipe=recipe,
+                            title="View Recipe",
+                            viewer=viewer,
+                            voted_up_by_viewer=voted_up_by_viewer)
+
+
+@app.route('/voteUp/<recipe_id>/<viewer>')
+def vote_up(recipe_id, viewer):
+    # Add viewer name to upvotes_who[]
+    recipe = recipes_collection.find_one({"_id": ObjectId(recipe_id)})
+    upvotes_who = list(recipe['upvotes_who'])
+    upvotes_who.append(viewer)
+    # Add (+1) to recipe.upvotes
+    print(recipe['upvotes'])
+    recipe_upvotes = recipe['upvotes']   
+    recipe_upvotes += 1
+    print(recipe_upvotes)
+
+    recipes_collection.update( {'_id': ObjectId(recipe_id)},{"$set":{'upvotes':recipe_upvotes,'upvotes_who':upvotes_who}}) 
+    
+# TO DO remake form username to user_id
+    # update viewers document upvoted_recipes
+    users_collection.update({'username': viewer},{"$push":{'upvoted_recipes':recipe_id}})
+
+    flash("Recipe Upvoted")
+    return redirect(request.referrer)
+
+
+@app.route('/removeVoteUp/<recipe_id>/<viewer>')
+def remove_vote_up(recipe_id, viewer):
+    # Remove viewer name to upvotes_who[]
+    recipe = recipes_collection.find_one({"_id": ObjectId(recipe_id)})
+    upvotes_who = list(recipe['upvotes_who'])
+    upvotes_who.remove(viewer)
+    # Subtract (-1) from recipe.upvotes
+    print(recipe['upvotes'])
+    recipe_upvotes = recipe['upvotes']   
+    recipe_upvotes -= 1
+    print(recipe_upvotes)
+
+    recipes_collection.update( {'_id': ObjectId(recipe_id)},{"$set":{'upvotes':recipe_upvotes,'upvotes_who':upvotes_who}})
+
+# TO DO remake form username to user_id
+    # update viewers document upvoted_recipes
+    users_collection.update({'username': viewer},{"$pull":{'upvoted_recipes':recipe_id}})
+    
+    flash("Removed Recipe Upvote :(")
+    return redirect(request.referrer)
 
 
 @app.route('/searchRecipes', methods=['GET', 'POST'])
 def search_recipes():
-    viewer = 'anonim'
+
     _categories = category_collection.find()
     category_list = [category for category in _categories]
+    category_list_sorted = sorted(category_list, key=itemgetter('category_name'))
+
     _cuisines = cuisine_collection.find()
     cuisine_list = [cuisine for cuisine in _cuisines]
+    cuisine_list_sorted = sorted(cuisine_list, key=itemgetter('cuisine_name'))
+    
     _allergens = allergens_collection.find()
     allergen_list = [allergen for allergen in _allergens]
     
-    if 'user' in session:
-        viewer = session['user']
-    flash(viewer)
+
     if request.method == 'POST':
         form = request.form.to_dict()
         if 'action' in form:
@@ -81,106 +180,99 @@ def search_recipes():
         if 'allergens' in form:
             form['allergens'] = request.form.getlist('allergens')
 
-        # Create a temporary list for storing the filters
+        # Create a temporary lists for storing filters and exclusions
         filters = list()
         exclusion = list()
-        # Loop through each of the keys from form
+        # Loop through each of the form keys
         for key in form:        
-            print(key, " ", form[key])
             # Create temporary dictionary to which will be our single filter
-            # Each filter MUST be a valid dictionary
             search_filter = dict()
-            # Create new k,v pars in above dictionary
-            # {"cuisines" : "asian"}
+            # Create new k,v pairs in above dictionary
             if key == 'allergens':
                 items = form[key]
                 for item in items:
-                    # print(item)                
-                    # exclusion_filter = dict()
-                    # exclusion_filter[key] = item
-                    exclusion.append(item)
-                    # exclusion.append(exclusion_filter)
+                    exclusion.append(item) 
             else:
                 search_filter[key] = form[key]
-                # Append then new created filter to our list of filters
                 filters.append(search_filter)
-
-        # Create single query with 1 or more filters
-        # should be like format: [{'cuisine': 'Greek'}, {'category': 'Seafood'}]
-
-        # Warning if no selection made
-
+        # check if selectoin made - if not - display warning
         if filters or exclusion:
+            # Create 2 queries
             recipes_with_allowed_allergens = list(recipes_collection.aggregate([
-                {
-                    "$match": {
-                        "$and": [{'allergens': { "$nin": exclusion}}]
-                    }
-                }
-            ]))
+                {"$match": {"$and": [{'allergens': { "$nin": exclusion}}]} }]))
             if filters:
-                recipes_filtered = list(recipes_collection.aggregate([
-                    {
-                        "$match": {
-                            "$and": filters       
-                        }
-                    }
-                ]))
-                print("print(filters)"),
-                print(filters)
-                print("count of recipes_filtered")
-                print(len(recipes_filtered))
-
-            print("print(exclusion)"),
-            print(exclusion)
-            print("count of recipes_with_allowed_allergens")
-            print(len(recipes_with_allowed_allergens))
-            
-            filtered_and_excluded_allergens = []
-            
+                recipes_filtered = list(recipes_collection.aggregate([{"$match": {"$and": filters } }]))
+            # combine results having common part in recipes_filtered and recipes_with_allowed_allergens
+            # keep results globally for pagination
+            global filtered_and_excluded_allergens   
+            filtered_and_excluded_allergens = []      
             if filters:
                 for item in recipes_with_allowed_allergens:
                     if item in recipes_filtered:
                         filtered_and_excluded_allergens.append(item)
             else:
                 filtered_and_excluded_allergens = recipes_with_allowed_allergens
+            # pagination for first page only
+            p_offset = 0
+            count = len(filtered_and_excluded_allergens)
+            if p_offset > count:
+                p_offset = count
 
-            print("filtered_and_excluded_allergens"); (len(filtered_and_excluded_allergens))
+            recipes = (filtered_and_excluded_allergens)[p_offset:p_limit+p_offset]
 
-            # for item in recipes_filtered:
-
-            # print (recipes_filtered.count())
-            
-            # print (recipes_filtered)
-            
-            # recipes = dict(recipes_filtered.aggregate([
-            #     {
-            #         "$match": {'allergens': { "$nin": exclusion}}
-            #         }
-            # ]))
-
-            
             return render_template("recipes.html",
-                                title="Filtered Recipes",
-                                recipes=filtered_and_excluded_allergens,
-                                count=len(filtered_and_excluded_allergens),
-                                allergens=allergens_collection.find(),
-                                cuisine=cuisine_collection.find(),
-                                category=category_collection.find(),
-                                viewer=viewer)
+                                    allergens=allergens_collection.find(),
+                                    category=category_collection.find(),
+                                    count=count,
+                                    cuisine=cuisine_collection.find(),
+                                    next_url=f"/searchRecipesPaginated?limit={str(p_limit)}&offset={str(p_offset + p_limit)}",
+                                    prev_url=f"/searchRecipesPaginated?limit={str(p_limit)}&offset={str(p_offset - p_limit)}",
+                                    p_limit=p_limit,
+                                    p_offset=p_offset,
+                                    recipes=recipes,
+                                    title="Filtered Recipes")
         else:
             flash("Choose something before search!")
             return render_template('search.html',
-                                title="Search again",
                                 allergens=allergen_list,
-                                cuisines=cuisine_collection.find(),
-                                categories=category_collection.find())
+                                categories=category_list_sorted,
+                                cuisines=cuisine_list_sorted,
+                                title="Search again")
 
     return render_template('search.html',
-                           title="Search",
                            allergens=allergen_list, 
-                           cuisines=cuisine_list,
-                           categories=category_list)
+                           categories=category_list_sorted,
+                           cuisines=cuisine_list_sorted,
+                           title="Search")
+
+@app.route('/searchRecipesPaginated')
+def search_recipes_paginated():
+    # Pagination
+    # Request the limit from link
+    p_limit = int(request.args['limit'])
+    # Request the offset from link
+    # make sure is 0 or more to avoid erver error	
+    p_offset = int(request.args['offset'])
+    if p_offset < 0:
+        p_offset = 0
+    # make sure  is not bigger or equal than recipes count
+    count = len(filtered_and_excluded_allergens)
+    if p_offset > count:
+        p_offset = count
+
+    recipes = (filtered_and_excluded_allergens)[p_offset:p_limit+p_offset]
+
+    return render_template("recipes.html",
+                        allergens=allergens_collection.find(),
+                        category=category_collection.find(),
+                        count=count,
+                        cuisine=cuisine_collection.find(),
+                        next_url=f"/searchRecipesPaginated?limit={str(p_limit)}&offset={str(p_offset + p_limit)}",
+                        prev_url=f"/searchRecipesPaginated?limit={str(p_limit)}&offset={str(p_offset - p_limit)}",
+                        p_limit=p_limit,
+                        p_offset=p_offset,
+                        recipes=recipes,
+                        title="Filtered Recipes")
 
 
 @app.route('/addRecipe')
@@ -189,21 +281,28 @@ def add_recipe():
     if 'user' in session:
         user_in_db = users_collection.find_one({"username": session['user']})
         if user_in_db:
+
             _categories = category_collection.find()
             category_list = [category for category in _categories]
+            category_list_sorted = sorted(category_list, key=itemgetter('category_name'))
+
             _allergens = allergens_collection.find()
             allergen_list = [allergen for allergen in _allergens]
+
             _cuisines = cuisine_collection.find()
             cuisine_list = [cuisine for cuisine in _cuisines]
+            cuisine_list_sorted = sorted(cuisine_list, key=itemgetter('cuisine_name'))
+
             return render_template('add_recipe.html',
-                                   title="Add Recipe",
-                                   categories=category_list,
                                    allergens=allergen_list,
-                                   cuisines=cuisine_list,
-                                   author_passed_in=user_in_db)
+                                   author_passed_in=user_in_db,
+                                   categories=category_list_sorted,
+                                   cuisines=cuisine_list_sorted,
+                                   title="Add Recipe")
         else:
             # user in session but not in database
             flash("Your session name is not in databse!")
+            return render_template("login.html", title="Login")
     else:
         # Render the page for user to be able to log in
         flash("Please log in first!")
@@ -230,7 +329,7 @@ def insert_recipe():
     recipes = recipes_collection
     recipes.insert_one(form_request_to_dict)
 
-    return redirect(url_for('get_recipes'))
+    return redirect(url_for('index'))
 
 
 @app.route('/editRecipe/<recipe_id>')
@@ -254,31 +353,37 @@ def edit_recipe(recipe_id):
 
                 _categories = category_collection.find()
                 category_list = [category for category in _categories]
+                category_list_sorted = sorted(category_list, key=itemgetter('category_name'))
+                
                 ingredients_list_to_string = (','.join(the_recipe['ingredients']))
+
                 _allergens = allergens_collection.find()
                 allergen_list = [allergen for allergen in _allergens]
+
                 _cuisines = cuisine_collection.find()
                 cuisine_list = [cuisine for cuisine in _cuisines]
+                cuisine_list_sorted = sorted(cuisine_list, key=itemgetter('cuisine_name'))
+
                 return render_template('edit_recipe.html',
-                                        recipe=the_recipe,
-                                        title="Edit Recipe",
-                                        categories=category_list,
-                                        ingredients_string=ingredients_list_to_string,
                                         allergens=allergen_list,
-                                        cuisines=cuisine_list,
-                                        author_passed_in=author_global)
+                                        author_passed_in=author_global,
+                                        categories=category_list_sorted,
+                                        cuisines=cuisine_list_sorted,
+                                        ingredients_string=ingredients_list_to_string,
+                                        recipe=the_recipe,
+                                        title="Edit Recipe")
             else:
                 # user is not an author or admin
                 flash("user is not an author!")
-                return redirect(url_for('get_recipes'))
+                return redirect(url_for('index'))
         else:
             # user in session but not in database
             flash("Your session name is not in databse!")
-            return redirect(url_for('get_recipes'))
+            return redirect(url_for('index'))
     else:
         # Render the page for user to be able to log in
         flash("Please log in first!")
-        return redirect(url_for('get_recipes'))
+        return redirect(url_for('index'))
         
 
 @app.route('/updateRecipe/<recipe_id>', methods=['POST'])
@@ -304,20 +409,25 @@ def update_recipe(recipe_id):
         'photo':request.form.get('photo')
     } ) 
     # pp.pprint(update)
-    return redirect(url_for('get_recipes'))
+    return redirect(url_for('index'))
 
+@app.route('/deleteRecipe/<recipe_id>', methods=['GET', 'POST'])
+def delete_recipe(recipe_id):
 
-@app.route('/viewRecipe/<recipe_id>')
-def view_recipe(recipe_id):
-    recipe = recipes_collection.find_one({"_id": ObjectId(recipe_id)})
-    return render_template("view_recipe.html",
-                           title="View Recipe",
-                           recipe=recipe)
+    # Before destroying document copy it to trash (deleted) with original id
+    recipe_to_be_deleted = recipes_collection.find({'_id':ObjectId(recipe_id)})
+    deleted_recipes_collection.insert(recipe_to_be_deleted)
+    # Delete pernamently from recipes_collection
+    recipes_collection.remove({'_id': ObjectId(recipe_id)})
+
+    return redirect(url_for('index'))
+
 
 
 ######################################################################
 #                             USER AUTH
 ######################################################################
+
 
 
 @app.route('/login', methods=['GET'])
@@ -365,7 +475,7 @@ def register():
     # Check if user is not logged in already
     if 'user' in session:
         flash('You are already signed in!')
-        return redirect(url_for('get_recipes'))
+        return redirect(url_for('index'))
     if request.method == 'POST':
         form = request.form.to_dict()
         # Check if password and password1 match
@@ -423,10 +533,40 @@ def profile(user):
     if 'user' in session:
         # If so get the user and pass him to template for now
         user_in_db = users_collection.find_one({"username": user})
-        return render_template('profile.html', title="Profile", user=user_in_db)
+        # prepare list of recipes created by user
+        profile_user_recipes = list(recipes_collection.find({'author': user_in_db['username']}))
+        # to avoid error escape if user has no list of ids of upvoted recipes in his document
+        try:
+            upvoted_recipes_ids = user_in_db['upvoted_recipes']
+        except:
+            return render_template('profile.html',
+                                profile_user_recipes=profile_user_recipes,    
+                                title="Profile",
+                                user=user_in_db)
+
+        # if user has upvoted recipes ids prepare list pull each id and create list of recipes documents
+        upvoted_recipes = []
+        for id in upvoted_recipes_ids:
+            # Upvoted recipes in user collection out of sync. 
+            # Admin or owner of one of recipes removed recipe...
+            try:
+                recip = recipes_collection.find_one({"_id": ObjectId(id) })
+                upvoted_recipes.append(recip)
+            except: 
+                # to do : remove invalid entry from document array
+                pass
+        # remove None values from list if exist
+        upvoted_recipes = [x for x in upvoted_recipes if x is not None]
+
+        return render_template('profile.html',
+                                profile_user_recipes=profile_user_recipes,
+                                title="Profile",
+                                upvoted_recipes=upvoted_recipes,
+                                user=user_in_db)
     else:
         flash("You must be logged in!")
-        return redirect(url_for('get_recipes'))
+        return redirect(url_for('index'))
+
 
 # Admin
 
@@ -438,10 +578,10 @@ def admin():
             return render_template('admin.html')
         else:
             flash('Only Admins can access this page!')
-            return redirect(url_for('get_recipes'))
+            return redirect(url_for('index'))
     else:
         flash('You must be logged in!')
-        return redirect(url_for('get_recipes'))
+        return redirect(url_for('index'))
 
 
 if __name__ == '__main__':

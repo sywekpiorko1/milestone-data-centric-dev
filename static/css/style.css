@@ -110,15 +110,21 @@ main {
 
 /* Buttons (view and edit) in all_recipe view of each separate recipe */
 
-.ngl {
+.ngl0 {
   position: absolute;
-  top: 55px;
+  top: 7px;
+  right: 7px;
+}
+
+.ngl1 {
+  position: absolute;
+  top: 62px;
   right: 7px;
 }
 
 .ngl2 {
   position: absolute;
-  top: 110px;
+  top: 117px;
   right: 7px;
 }
 

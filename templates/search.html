@@ -17,17 +17,18 @@
         <div class="col offset-s2">
           {% for allergen in allergens %}
           <div class="col s12 m6">
-            <input name="allergens" value="{{allergen.allergen_name}}" type="checkbox" class="filled-in" id="{{allergen.allergen_name}}"/>
+            <input name="allergens" value="{{allergen.allergen_name}}" type="checkbox" class="filled-in" id="{{allergen.allergen_name}}" />
             <label for="{{allergen.allergen_name}}">{{allergen.allergen_name}}</label>
           </div>
           {% endfor %}
         </div>
       </div>
-      <!--                              WORD IN INGREDIENTS -->
+      <!--                              TODO SEARCH WORD IN MEAL NAME -->
+      <!--                              TODO SEARCH WORD IN INGREDIENTS -->
 
-      
+
       <!--                              CATEGORY FROM LIST -->
-      <div class="input-field col s12">
+      <div class="input-field col m6 s12">
         <i class="material-icons prefix">category</i>
         <select id="category" name="category">
           <option value="" disabled selected>ALL Categories</option>
@@ -39,7 +40,7 @@
       </div>
 
       <!--                                CUISINE FROM LIST -->
-      <div class="input-field col s12">
+      <div class="input-field col m6 s12">
         <i class="material-icons prefix">flag</i>
         <select id="cuisine" name="cuisine">
           <option value="" disabled selected>ALL Cuisines</option>
@@ -50,13 +51,13 @@
         <label>Search in Cuisines</label>
       </div>
 
-      <div class="row right-align">
-        <button class="btn btn-large waves-seffect waves-light grey darken-4 z-depth-3" type="submit"
+      <div class="row center-align">
+        <button class="btn btn-large waves-seffect waves-light blue darken-4 z-depth-3" type="submit"
           name="action">Search
           <i class="material-icons right">search</i>
         </button>
       </div>
     </form>
   </div>
-
+</div>
 {% endblock main_content %}
