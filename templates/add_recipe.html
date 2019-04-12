@@ -1,5 +1,8 @@
 {% extends 'base.html' %} {% block main_content %}
 <div class="container-wide" style="margin-top: 20px">
+  <div class="card-action">
+    <a href="#" onclick="history.go(-1)">BACK</a>
+  </div>
   <div class="row">
     <form action="{{ url_for('insert_recipe') }}" method="POST" class="col s12">
 
@@ -73,7 +76,8 @@
         <div class="col offset-s2">
           {% for allergen in allergens %}
           <div class="col s12 m6">
-            <input name="allergens" value="{{allergen.allergen_name}}" type="checkbox" class="filled-in" id="{{allergen.allergen_name}}" />
+            <input name="allergens" value="{{allergen.allergen_name}}" type="checkbox" class="filled-in"
+              id="{{allergen.allergen_name}}" />
             <label for="{{allergen.allergen_name}}">{{allergen.allergen_name}}</label>
           </div>
           {% endfor %}

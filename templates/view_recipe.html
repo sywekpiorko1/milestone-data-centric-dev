@@ -20,7 +20,7 @@
           {% if viewer != 'anonim' and viewer !=recipe.author %}
           {% if voted_up_by_viewer %}
           <a href="{{ url_for('remove_vote_up', recipe_id=recipe._id, viewer=viewer) }}" title="Remove Grade UP!"
-            class="ngl0 btn-floating waves-effect waves-light red"><i class="material-icons">favorite</i></a>
+            class="ngl0 btn-floating waves-effect waves-light amber pulse"><i class="material-icons">favorite_border</i></a>
           {% else %}
           <a href="{{ url_for('vote_up', recipe_id=recipe._id, viewer=viewer) }}" title="Grade UP!"
             class="ngl0 btn-floating waves-effect waves-light grey lighten-2 pulse"><i
@@ -40,12 +40,20 @@
           <!-- DELETE FROM DATABASE -->
 
           {% if viewer == recipe.author or viewer == 'admin' %}
-          <!-- <a href="{{ url_for('edit_recipe', recipe_id=recipe._id) }}" title="Edit" -->
-          <a href="{{ url_for('delete_recipe', recipe_id=recipe._id) }}" title="REMOVE"
-            class="ngl2 btn-floating waves-effect waves-light red"><i class="material-icons">delete</i></a>
+          <a href="#removeModal" class="modal-trigger ngl2 btn-floating waves-effect waves-light pink darken-4" title="REMOVE"><i
+              class="material-icons">delete</i></a>
+
+          <div class="modal" id="removeModal">
+            <div class="modal-content">
+              <h4>Warnig !</h4>
+              <p>Are You sure You want to delete recipe permanently ?</p>
+            </div>
+            <div class="modal-footer">
+              <a href="{{ url_for('delete_recipe', recipe_id=recipe._id) }}" class="btn red" title="REMOVE">DELETE</a>
+              <a href="#" class="modal-close btn green">NO - go back</a>
+            </div>
+          </div>
           {% endif %}
-
-
 
           <h6 class="center-align"><i>Cuisine: {{ recipe.cuisine }}</i></h6>
           <h4 class="header">{{recipe.meal}}</h4>

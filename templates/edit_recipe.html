@@ -1,5 +1,8 @@
 {% extends 'base.html' %} {% block main_content %}
 <div class="container-wide" style="margin-top: 20px">
+  <div class="card-action">
+    <a href="#" onclick="history.go(-1)">BACK</a>
+  </div>
   <div class="row">
     <form action="{{ url_for('update_recipe', recipe_id=recipe._id) }}" method="POST" class="col s12">
 
@@ -55,7 +58,8 @@
       <div class="row">
         <div class="input-field col s12">
           <i class="material-icons prefix">scatter_plot</i>
-          <textarea id="textarea1" name="ingredients" class="materialize-textarea validate" required>{{ ingredients_string }}</textarea>
+          <textarea id="textarea1" name="ingredients" class="materialize-textarea validate"
+            required>{{ ingredients_string }}</textarea>
           <label for="icon_prefix">Ingredients (seperated by commas)</label>
         </div>
       </div>
@@ -64,7 +68,8 @@
       <div class="row">
         <div class="input-field col s12">
           <i class="material-icons prefix">format_list_numbered</i>
-          <textarea id="textarea2" name="instructions" class="materialize-textarea validate" required>{{ recipe.instructions }}</textarea>
+          <textarea id="textarea2" name="instructions" class="materialize-textarea validate"
+            required>{{ recipe.instructions }}</textarea>
           <label for="icon_telephone">Preparation Instructions</label>
         </div>
       </div>
@@ -81,9 +86,9 @@
           {% for allergen in allergens %}
           <div class="col s12 m6">
             <input name="allergens" value="{{allergen.allergen_name}}" type="checkbox" class="filled-in"
-              id="{{allergen.allergen_name}}" {% if allergen.allergen_name in recipe.allergens %} checked {% endif %}/>
+              id="{{allergen.allergen_name}}" {% if allergen.allergen_name in recipe.allergens %} checked {% endif %} />
             <label for="{{allergen.allergen_name}}">{{allergen.allergen_name}}</label>
-           </div>
+          </div>
           {% endfor %}
         </div>
       </div>
