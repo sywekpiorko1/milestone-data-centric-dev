@@ -14,11 +14,11 @@
   <header>
     <nav class="navbar">
       <div class="nav-wrapper black">
-        <a href="{{ url_for('index') }}" class="brand-logo left" style="padding-left: 50px">Cookbook</a>
+        <a href="{{ url_for('index') }}" class="brand-logo left" style="margin-left: 100px">Cookbook</a>
         <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
         <ul class="right hide-on-med-and-down">
           <li><a href="{{ url_for('search_recipes') }}">SEARCH</a></li>
-          <li><a href="{{ url_for('get_recipes', limit=4, offset=0) }}">ALL RECIPES</a></li>
+          <li><a href="{{ url_for('get_recipes', limit=8, offset=0) }}">ALL RECIPES</a></li>
           {% if session.user %}
           <li><a href="{{ url_for('add_recipe') }}">ADD RECIPE</a></li>
           <li class="{% if 'profile' in request.path %} active {% endif %}"><a
@@ -37,11 +37,11 @@
         <!--  ########################  Navbar/mobile ###########################   -->
         <ul class="side-nav" id="mobile-demo">
           <li><a href="{{ url_for('search_recipes') }}">SEARCH</a></li>
-          <li><a href="{{ url_for('get_recipes', limit=4, offset=0) }}">ALL RECIPES</a></li>
+          <li><a href="{{ url_for('get_recipes', limit=8, offset=0) }}">ALL RECIPES</a></li>
           {% if session.user %}
           <li><a href="{{ url_for('add_recipe') }}">ADD RECIPE</a></li>
           <li class="{% if 'profile' in request.path %} active {% endif %}"><a
-            href="{{url_for('profile', user=session.user)}}">Profile: {{ session.user }}</a></li>
+              href="{{url_for('profile', user=session.user)}}">Profile: {{ session.user }}</a></li>
           <li><a href="{{url_for('logout')}}">Logout</a></li>
           {% if session.user == 'admin' %}
           <li class="{% if 'admin' in request.path and 'profile' not in request.path %} active {% endif %}"><a
@@ -95,8 +95,8 @@
       $('select').material_select();
       $(".button-collapse").sideNav();
       $('.materialboxed').materialbox();
-      $('#textarea1').trigger('autoresize'); 
-      $('#textarea2').trigger('autoresize'); 
+      $('#textarea1').trigger('autoresize');
+      $('#textarea2').trigger('autoresize');
     });
     $('.datepicker').pickadate({
       selectMonths: true, // Creates a dropdown to control month
@@ -109,6 +109,11 @@
     });
     // https://stackoverflow.com/questions/34248898/how-to-validate-select-option-for-a-materialize-dropdown
     $("select[required]").css({ display: "block", height: 0, padding: 0, width: 0, position: 'absolute' });
+    // https://github.com/twbs/bootstrap/issues/18294
+    $(".myClicableBox").click(function () {
+      window.location = $(this).find("a").attr("href");
+      return false;
+    });
   </script>
 
 </body>

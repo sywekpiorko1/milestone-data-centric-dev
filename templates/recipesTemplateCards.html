@@ -1,0 +1,31 @@
+<div class="col s12 m6 l3">
+  <div class="card z-depth-3">
+
+
+    <div class="card-image">
+      <img id="padded" src="{{recipe.photo}}" alt="{{recipe.meal}}" class="materialboxed">
+      <a class="btn-floating {% if recipe.upvotes > 99 %} btn-large {% endif %}halfway-fab orange lighten-4">
+        <p id="upvotes" class="center-align halfway indigo-text"><i id="upvotes_icon"
+            class="material-icons red-text">favorite</i>{{recipe.upvotes}}</p>
+      </a>
+    </div>
+
+
+    <div id="padding-5px" class="card-content">
+      <span class="truncate card-title grey-text text-darken-4 center-align">
+        {{recipe.meal}}
+      </span>
+      <h6 class="center-align">Cuisine: <em>{{recipe.cuisine}}</em></h6>
+      <h6 class="center-align">Category: <em>{{recipe.category}}</em></h6>
+    </div>
+
+
+    <div class="card-action myClicableBox waves-effect waves-block waves-light grey lighten-4">
+      <div class="center-align">
+        <a href="{{ url_for('view_recipe', recipe_id=recipe._id) }}">view details</a>
+      </div>
+    </div>
+
+    
+  </div>
+</div>

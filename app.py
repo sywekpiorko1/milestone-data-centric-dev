@@ -32,7 +32,7 @@ views_global = 0
 upvotes_global = 0
 upvotes_who_global = []
 filtered_and_excluded_allergens = []
-p_limit = 4
+p_limit = 8
 
 
 ######################################################################
@@ -52,7 +52,7 @@ def get_recipes():
     viewer = 'anonim'
     if 'user' in session:
         user_in_db = users_collection.find_one({"username": session['user']})
-        print (user_in_db)
+        print ("USER: ", user_in_db['username'])
         if user_in_db:
             viewer = user_in_db['username']
     # flash(viewer)
@@ -72,6 +72,21 @@ def get_recipes():
     if p_offset > recipes_total:
         p_offset = recipes_total
 
+    # Query recipes collection and return ordered by votes descending
+    filteredRecipes = [recipe for recipe in recipes_collection.find(
+                        {
+                            '$query':
+                                {'meal': { '$regex': '.'} },
+                                '$orderby': {'views': -1}
+                            }
+                        )]
+    print("Top 10 recipes [name] order by [views] :  ")
+    for index,recipe in enumerate(filteredRecipes):
+        print(recipe['meal'], recipe['views']) 
+        if index == 10:
+            break   
+
+    # Default sort by ID >> greater id for last added to dbase 
     recipes = list(recipes_collection.find().sort('_id').limit(p_limit).skip(p_offset))
     return render_template("recipes.html",
                             allergens=allergens_collection.find(),
@@ -101,6 +116,7 @@ def view_recipe(recipe_id):
     views += 1
     recipes_collection.update( {'_id': ObjectId(recipe_id)},{"$set":{'views':views}}) 
     upvotes_who = list(recipe['upvotes_who'])
+    
     if viewer in upvotes_who:
         voted_up_by_viewer = True
     else:
@@ -407,9 +423,15 @@ def update_recipe(recipe_id):
         'allergens':request.form.getlist('allergens'),
         'youtube':request.form.get('youtube'),
         'photo':request.form.get('photo')
-    } ) 
+    } )
+    recipe = recipes_collection.find_one({"_id": ObjectId(recipe_id)}) 
     # pp.pprint(update)
-    return redirect(url_for('index'))
+    # return redirect(url_for('index'))
+    return render_template("view_recipe.html",
+                        recipe=recipe,
+                        title="View Recipe",
+                        viewer=session['user'],
+                        voted_up_by_viewer=False)
 
 @app.route('/deleteRecipe/<recipe_id>', methods=['GET', 'POST'])
 def delete_recipe(recipe_id):
@@ -534,7 +556,10 @@ def profile(user):
         # If so get the user and pass him to template for now
         user_in_db = users_collection.find_one({"username": user})
         # prepare list of recipes created by user
-        profile_user_recipes = list(recipes_collection.find({'author': user_in_db['username']}))
+        profile_user_recipes = recipes_collection.find({'author': user_in_db['username']}).sort('meal')
+        # if == 0 change to None to avoid displaying Header in profile template
+        if profile_user_recipes.count() == 0:
+            profile_user_recipes = None
         # to avoid error escape if user has no list of ids of upvoted recipes in his document
         try:
             upvoted_recipes_ids = user_in_db['upvoted_recipes']
@@ -544,7 +569,7 @@ def profile(user):
                                 title="Profile",
                                 user=user_in_db)
 
-        # if user has upvoted recipes ids prepare list pull each id and create list of recipes documents
+        # if user document contain upvoted recipes ids prepare list pull each id and create list of recipes documents
         upvoted_recipes = []
         for id in upvoted_recipes_ids:
             # Upvoted recipes in user collection out of sync. 
@@ -557,6 +582,7 @@ def profile(user):
                 pass
         # remove None values from list if exist
         upvoted_recipes = [x for x in upvoted_recipes if x is not None]
+        upvoted_recipes = sorted(upvoted_recipes, key=itemgetter('meal')) 
 
         return render_template('profile.html',
                                 profile_user_recipes=profile_user_recipes,

@@ -6,34 +6,47 @@
   <h3 class="center-align">Sorry, we have no recipes matching criteria.</h3>
   <h3 class="center-align">Try another search.</h3>
   {% else %}
-  <h3 class="center-align">We have&nbsp;{{ count }}
+  <h6 class="left-align">Found&nbsp;{{ count }}
     {% if count > 1 %}
     recipes
     {% else %}
     recipe
     {% endif %}
-    in ours database.</h3>
+    in DB.</h6>
   {% endif %}
 
   <ul class="pagination center-align">
     {% if p_offset > 0 %}
     <li class="waves-effect"><a href="{{ prev_url }}"><i class="material-icons">chevron_left</i></a></li>
     {% endif %}
-    <!-- <li class="active"><a href="#!">1</a></li>
-    <li class="waves-effect"><a href="#!">2</a></li>
-    <li class="waves-effect"><a href="#!">3</a></li>
-    <li class="waves-effect"><a href="#!">4</a></li>
-    <li class="waves-effect"><a href="#!">5</a></li> -->
+    {% if (p_offset > 0) or (p_offset + p_limit <  count) %}
+    <li class="line-height-2">page {{ ( p_offset // p_limit )  + 1 }} of {{ (count // p_limit) + 1 }}</li>
+    {% endif %}
     {% if p_offset + p_limit <  count %}
     <li class="waves-effect"><a href="{{ next_url }}"><i class="material-icons">chevron_right</i></a></li>
     {% endif %}
   </ul>
 
-  {% for recipe in recipes %}
+  <div class="row">
 
-  {% include "recipesTemplate.html"  %}
+    {% for recipe in recipes %}
 
-  {% endfor %}
+    {% include "recipesTemplateCards.html"  %}
 
+    {% endfor %}
+
+  </div>
+
+  {% if  (count - p_offset) > 4  %}
+  <ul class="pagination center-align">
+    {% if p_offset > 0 %}
+    <li class="waves-effect"><a href="{{ prev_url }}"><i class="material-icons">chevron_left</i></a></li>
+    {% endif %}
+   
+    {% if p_offset + p_limit <  count %}
+    <li class="waves-effect"><a href="{{ next_url }}"><i class="material-icons">chevron_right</i></a></li>
+    {% endif %}
+  </ul>
+  {% endif %}
 
   {% endblock main_content %}
