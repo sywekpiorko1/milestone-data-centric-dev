@@ -1,7 +1,7 @@
 requirements_old.txt
 env.py
 json/
-
+.bashrc
 
 # Created by https://www.gitignore.io/api/flask,cloud9,visualstudiocode
 # Edit at https://www.gitignore.io/?templates=flask,cloud9,visualstudiocode
