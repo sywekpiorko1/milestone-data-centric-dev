@@ -10,6 +10,7 @@ from operator import itemgetter
 
 
 app = Flask(__name__)
+# app._static_folder = "static/images"
 
 # MongoDB config
 app.config['MONGO_URI'] = os.environ.get("MONGO_URI")
@@ -80,10 +81,10 @@ def get_recipes():
                                 '$orderby': {'views': -1}
                             }
                         )]
-    print("Top 10 recipes [name] order by [views] :  ")
+    print("Top 5 recipes [name] order by [views] :  ")
     for index,recipe in enumerate(filteredRecipes):
         print(recipe['meal'], recipe['views']) 
-        if index == 10:
+        if index == 5:
             break   
 
     # Default sort by ID >> greater id for last added to dbase 
@@ -365,8 +366,6 @@ def edit_recipe(recipe_id):
                 global upvotes_who_global
                 upvotes_who_global = list(the_recipe['upvotes_who'])
 
-                pp.pprint(the_recipe)
-
                 _categories = category_collection.find()
                 category_list = [category for category in _categories]
                 category_list_sorted = sorted(category_list, key=itemgetter('category_name'))
@@ -406,9 +405,7 @@ def edit_recipe(recipe_id):
 def update_recipe(recipe_id):
     form_request_to_dict = request.form.to_dict()
     form_request_to_dict['ingredients'] = form_request_to_dict['ingredients'].split(",")
-    # pp.pprint(form_request_to_dict)
-    
-    # update =( {'_id': ObjectId(recipe_id)},
+
     recipes_collection.update( {'_id': ObjectId(recipe_id)},
     {
         'meal':request.form.get('meal'),
@@ -425,8 +422,7 @@ def update_recipe(recipe_id):
         'photo':request.form.get('photo')
     } )
     recipe = recipes_collection.find_one({"_id": ObjectId(recipe_id)}) 
-    # pp.pprint(update)
-    # return redirect(url_for('index'))
+
     return render_template("view_recipe.html",
                         recipe=recipe,
                         title="View Recipe",
@@ -612,10 +608,12 @@ def admin():
 
 if __name__ == '__main__':
     if os.environ.get("DEVELOPMENT"):
+        print("DEVELOPMENT")
         app.run(host=os.environ.get('IP'),
                 port=os.environ.get('PORT'),
                 debug=True)
     else:
+        print("NOT A DEVELOPMENT")
         app.run(host=os.environ.get('IP'),
                 port=os.environ.get('PORT'),
                 debug=False)

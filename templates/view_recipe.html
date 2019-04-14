@@ -45,12 +45,13 @@
 
           <div class="modal" id="removeModal">
             <div class="modal-content">
-              <h4>Warnig !</h4>
-              <p>Are You sure You want to delete recipe permanently ?</p>
+                <i class="large red-text material-icons">error_outline</i>
+                <!-- <h4 class="red-text">WARNING</h4> -->
+              <h4>Do You want to delete recipe permanently ?</h4>
             </div>
             <div class="modal-footer">
-              <a href="{{ url_for('delete_recipe', recipe_id=recipe._id) }}" class="btn red" title="REMOVE">DELETE</a>
-              <a href="#" class="modal-close btn green">NO - go back</a>
+              <a href="{{ url_for('delete_recipe', recipe_id=recipe._id) }}" class="btn red" title="REMOVE">YES - DELETE</a>
+              <a href="#" class="modal-close btn green" style="margin-left: 1rem">NO - go back</a>
             </div>
           </div>
           {% endif %}

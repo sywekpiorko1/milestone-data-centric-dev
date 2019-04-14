@@ -20,7 +20,14 @@
     <li class="waves-effect"><a href="{{ prev_url }}"><i class="material-icons">chevron_left</i></a></li>
     {% endif %}
     {% if (p_offset > 0) or (p_offset + p_limit <  count) %}
-    <li class="line-height-2">page {{ ( p_offset // p_limit )  + 1 }} of {{ (count // p_limit) + 1 }}</li>
+    <li class="line-height-2">
+      page {{ ( p_offset // p_limit )  + 1 }} of
+      {% if count % p_limit == 0 %}
+      {{ (count // p_limit) }}
+      {% else %}
+      {{ ( count // p_limit) + 1 }}
+      {% endif %}
+    </li>
     {% endif %}
     {% if p_offset + p_limit <  count %}
     <li class="waves-effect"><a href="{{ next_url }}"><i class="material-icons">chevron_right</i></a></li>
@@ -42,7 +49,7 @@
     {% if p_offset > 0 %}
     <li class="waves-effect"><a href="{{ prev_url }}"><i class="material-icons">chevron_left</i></a></li>
     {% endif %}
-   
+
     {% if p_offset + p_limit <  count %}
     <li class="waves-effect"><a href="{{ next_url }}"><i class="material-icons">chevron_right</i></a></li>
     {% endif %}
