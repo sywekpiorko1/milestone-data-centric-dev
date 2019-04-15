@@ -36,13 +36,23 @@ main {
   padding-left: 2rem
 }
 
-/* Login and Register form */
+/* Login,Register form, Recipe Details */
 
-.container-width550 {
+.container-width350 {
   background: white;
   padding: 20px 25px;
   border: 2px solid rgba(175, 144, 233, 0.952);
   width: 350px;
+  height: auto;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.container-width750 {
+  background: white;
+  padding: 20px 25px;
+  border: 2px solid rgba(175, 144, 233, 0.952);
+  width: 750px;
   height: auto;
   box-sizing: border-box;
   position: relative;
@@ -102,18 +112,18 @@ main {
 }
 
 /* Pagination  */
+
 /* Search Template */
 
 br.line-height-2, li.line-height-2 {
   line-height: 2.1;
 }
 
-
 /* Cards */
 
 #padded {
-  padding-left: 10px; 
-  padding-top: 10px; 
+  padding-left: 10px;
+  padding-top: 10px;
   padding-right: 10px;
 }
 
@@ -126,9 +136,19 @@ br.line-height-2, li.line-height-2 {
   line-height: 12px;
 }
 
-#padding-5px{
+#padding-5px {
   padding-left: 5px;
   padding-right: 5px;
+}
+
+.cards .card .card-action {
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+
+.cards .card {
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
 }
 
 /* Collection */
@@ -138,24 +158,18 @@ br.line-height-2, li.line-height-2 {
   height: 120px;
 } */
 
-/* Buttons (view and edit) in all_recipe view of each separate recipe */
+/* Section */
 
-.ngl0 {
-  position: absolute;
-  top: 7px;
-  right: 7px;
+.margin0 {
+  margin:0;
 }
 
-.ngl1 {
-  position: absolute;
-  top: 62px;
-  right: 7px;
+.tabs .indicator {
+  background-color: #1a237e;
 }
 
-.ngl2 {
-  position: absolute;
-  top: 117px;
-  right: 7px;
+.tabs .tab a:focus, .tabs .tab a:focus.active {
+  background: transparent;
 }
 
 /* Footer */

@@ -1,77 +1,145 @@
-<!--TO BE FINISHED -->
-
-
 {% extends 'base.html' %} {% block main_content %}
 
-<div class="container">
-  <div class="col s12 m6 l4">
-    <div class="card horizontal z-depth-3">
-      <div class="card-image">
-        <img src="{{recipe.photo}}">
+<section class="container-width750 section">
+  <div class="row">
+    {% if viewer != 'anonim' and viewer !=recipe.author %}
+    {% if voted_up_by_viewer %}
+    <p class="margin0 right-align teal-text">You upvoted this recipe !!!</p>
+    {% else %}
+    <p class="margin0 right-align teal-text"><small>You can upvote this recipe</small></p>
+    <p class="margin0 right-align teal-text"><small>by pressing THUMB UP at bottom of page !</small></p>
+    {% endif %}
+    {% else %}
+    <p class="margin0 right-align teal-text">You can't upvote this recipe as author...</p>
+    {% endif %}
+  </div>
+
+  <!-- recipe top info -->
+  <div class="row">
+    <div class="col s12 l6">
+      <h4 class="indigo-text text-darken-4 center-align">{{ recipe.meal }}</h4>
+      <h6 class="indigo-text textdarken-3 center-align"><small>by</small>&nbsp;<i>{{ recipe.author }}</i></h6>
+    </div>
+    <br>
+    <div class="col l6 s12">
+
+      <div class="col s6 center-align">
+        <h6 class="indigo-text text-darken-2 center-align">
+          <small>Cuisine:</small>&nbsp;<span>{{ recipe.cuisine }}</span></h6>
+        <h6 class="indigo-text text-darken-2 center-align">
+          <small>Upvotes:</small>&nbsp;<span>{{ recipe.upvotes }}</span></h6>
+
       </div>
-      <div class="card-stacked">
-        <div class="card-action">
-          <a href="#" onclick="history.go(-1)">BACK</a>
-        </div>
-        <div class="card-content">
+      <div class="col s6 center-align">
+        <h6 class="indigo-text text-darken-1 center-align">
+          <small>Category:</small>&nbsp;<span>{{ recipe.category }}</span></h6>
+        <h6 class="indigo-text text-darken-1 center-align"><small>Views:</small>&nbsp;<span>{{ recipe.views }}</span>
+        </h6>
 
-          <!-- VOTE UP or REMOVE VOT UP -->
-
-          {% if viewer != 'anonim' and viewer !=recipe.author %}
-          {% if voted_up_by_viewer %}
-          <a href="{{ url_for('remove_vote_up', recipe_id=recipe._id, viewer=viewer) }}" title="Remove Grade UP!"
-            class="ngl0 btn-floating waves-effect waves-light amber pulse"><i class="material-icons">favorite_border</i></a>
-          {% else %}
-          <a href="{{ url_for('vote_up', recipe_id=recipe._id, viewer=viewer) }}" title="Grade UP!"
-            class="ngl0 btn-floating waves-effect waves-light grey lighten-2 pulse"><i
-              class="material-icons">favorite</i></a>
-          {% endif %}
-          {% endif %}
-
-          <!-- EDIT -->
-
-          {% if viewer == recipe.author or viewer == 'admin' %}
-          <a href="{{ url_for('edit_recipe', recipe_id=recipe._id) }}" title="Edit"
-            class="{% if viewer == 'admin' %}ngl1{% else %}ngl0{% endif %} btn-floating waves-effect waves-light green"><i
-              class="material-icons">edit</i></a>
-          {% endif %}
-
-
-          <!-- DELETE FROM DATABASE -->
-
-          {% if viewer == recipe.author or viewer == 'admin' %}
-          <a href="#removeModal" class="modal-trigger ngl2 btn-floating waves-effect waves-light pink darken-4" title="REMOVE"><i
-              class="material-icons">delete</i></a>
-
-          <div class="modal" id="removeModal">
-            <div class="modal-content">
-                <i class="large red-text material-icons">error_outline</i>
-                <!-- <h4 class="red-text">WARNING</h4> -->
-              <h4>Do You want to delete recipe permanently ?</h4>
-            </div>
-            <div class="modal-footer">
-              <a href="{{ url_for('delete_recipe', recipe_id=recipe._id) }}" class="btn red" title="REMOVE">YES - DELETE</a>
-              <a href="#" class="modal-close btn green" style="margin-left: 1rem">NO - go back</a>
-            </div>
-          </div>
-          {% endif %}
-
-          <h6 class="center-align"><i>Cuisine: {{ recipe.cuisine }}</i></h6>
-          <h4 class="header">{{recipe.meal}}</h4>
-          <p>{{recipe.instructions}}</p>
-        </div>
-        <div class="card-content">
-          <h4 class="header">Ingredients</h4>
-          {% for ingredient in recipe.ingredients %}
-          <p>{{ingredient}}</p>
-          {% endfor %}
-        </div>
-        <div class="card-action">
-          <a href="#" onclick="history.go(-1)">BACK</a>
-        </div>
       </div>
     </div>
   </div>
-</div>
+
+  <!-- TABS -->
+  <div class="row">
+    <div class="col s12">
+      <ul class="tabs">
+        <li class="tab col s6">
+          <a href="#ingredients" class="indigo-text text-darken-4">INGREDIENTS</a>
+        </li>
+        <li class="tab col s6">
+          <a href="#instructions" class="indigo-text text-darken-4">INSTRUCTIONS</a>
+        </li>
+      </ul>
+    </div>
+    <!-- ingredients tab -->
+    <div class="col s12" id="ingredients">
+      <div class="section">
+        <div class="col s12 l5 offset-l1">
+          {% for ingredient in recipe.ingredients %}
+          <p><strong>{{ loop.index }}:</strong>&nbsp;&nbsp;{{ ingredient }}</p>
+          {% endfor %}
+        </div>
+        <div class="margin-up col s6 offset-s3 l4 offset-l2">
+          <img src="{{ recipe.photo }}" alt="{{ recipe.meal }}" class="responsive-img materialboxed z-depth-3">
+        </div>
+      </div>
+    </div>
+    <!-- instructions tab -->
+    <div class="col s12" id="instructions">
+      <div class="section">
+        <div class="col s12 l11 offset-l1">
+          {% set list = (recipe.instructions).split('.') %}
+          {% for line in range((list|length) - 1) %}
+          <p><strong>{{ loop.index }}:</strong>&nbsp;&nbsp;{{ list[line] }}</p>
+          {% endfor %}
+        </div>
+        {% if recipe_video %}
+        <div class="col s12">
+          <!-- <p>{{ recipe.youtube }}</p>
+          <p>{{ recipe_video }}</p> -->
+          <div class="video-container">
+              <iframe src="{{ recipe_video }}" allowfullscreen="" width="853" frameborder="0"></iframe>
+            </div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <br>
+
+  <!-- button at bottom of page -->
+  <div class="row">
+
+    <!-- EDIT -->
+    <div class="col s4 m4 l4 left-align">
+      {% if viewer == recipe.author or viewer == 'admin' %}
+      <a href="{{ url_for('edit_recipe', recipe_id=recipe._id) }}" title="Edit"
+        class="btn waves-effect waves-light green"><i class="material-icons">edit</i></a>
+      {% endif %}
+    </div>
+
+    <!-- VOTE UP or REMOVE VOT UP -->
+    <div class="col s4 m4 l4 center-align">
+      {% if viewer != 'anonim' and viewer !=recipe.author %}
+      {% if voted_up_by_viewer %}
+      <a href="{{ url_for('remove_vote_up', recipe_id=recipe._id, viewer=viewer) }}" title="Remove Grade UP!"
+        class="btn waves-effect waves-light blue-grey"><i class="material-icons">thumb_down</i></a>
+      {% else %}
+      <a href="{{ url_for('vote_up', recipe_id=recipe._id, viewer=viewer) }}" title="Grade UP!"
+        class="btn waves-effect waves-light amber pulse"><i class="material-icons">thumb_up</i></a>
+      {% endif %}
+      {% endif %}
+    </div>
+
+    <!-- DELETE FROM DATABASE  >> MODAL-->
+    <div class="col s4 m4 l4 right-align">
+      {% if viewer == recipe.author or viewer == 'admin' %}
+      <a href="#removeModal" class="modal-trigger btn waves-effect waves-light pink darken-4" title="REMOVE"><i
+          class="material-icons">delete</i></a>
+
+      <div class="modal" id="removeModal">
+        <div class="modal-content">
+          <i class="large red-text material-icons">error_outline</i>
+          <!-- <h4 class="red-text">WARNING</h4> -->
+          <h4>Do You want to delete recipe permanently ?</h4>
+        </div>
+        <div class="modal-footer">
+          <a href="{{ url_for('delete_recipe', recipe_id=recipe._id) }}" class="btn red" title="REMOVE">YES - DELETE</a>
+          <a href="#" class="modal-close btn green" style="margin-left: 1rem">NO - go back</a>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col s4 m4 l4">
+      <a href="#" onclick="history.go(-1)" class="btn-large waves-effect waves-light"><i
+          class="material-icons">arrow_back</i></a>
+    </div>
+  </div>
+
+</section>
 
 {% endblock main_content %}

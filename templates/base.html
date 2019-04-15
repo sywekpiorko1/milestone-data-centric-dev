@@ -17,12 +17,12 @@
         <a href="{{ url_for('index') }}" class="brand-logo center"><img src="..\static\images\logo2.png" width="195" height="auto" style="margin-top: -0.2rem"></a>
         <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
         <ul class="right hide-on-med-and-down">
-          <li><a href="{{ url_for('search_recipes') }}">SEARCH</a></li>
+          <li><a href="{{ url_for('search_recipes') }}"><i class="material-icons">search</i></a></li>
           <li><a href="{{ url_for('get_recipes', limit=8, offset=0) }}">ALL RECIPES</a></li>
           {% if session.user %}
           <li><a href="{{ url_for('add_recipe') }}">ADD RECIPE</a></li>
           <li class="{% if 'profile' in request.path %} active {% endif %}"><a
-              href="{{url_for('profile', user=session.user)}}">Profile: {{ session.user }}</a></li>
+              href="{{url_for('profile', user=session.user)}}"><i class="material-icons">person</i></a></li>
           <li><a href="{{url_for('logout')}}">Logout</a></li>
           {% if session.user == 'admin' %}
           <li class="{% if 'admin' in request.path and 'profile' not in request.path %} active {% endif %}"><a
@@ -97,6 +97,7 @@
       $(".button-collapse").sideNav();
       $('.materialboxed').materialbox();
       $('.modal').modal();
+      $('.tabs').tabs();
       $('#textarea1').trigger('autoresize');
       $('#textarea2').trigger('autoresize');
     });

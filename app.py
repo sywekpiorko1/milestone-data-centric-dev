@@ -121,10 +121,15 @@ def view_recipe(recipe_id):
         voted_up_by_viewer = True
     else:
         voted_up_by_viewer = False
+    # adjust youtube link to allow to be embeded on page
+    try:
+        recipe_video = recipe['youtube'].replace("watch?v=","embed/")
+    except:
+        recipe_video = None
 
-    print(voted_up_by_viewer)
     return render_template("view_recipe.html",
                             recipe=recipe,
+                            recipe_video=recipe_video,
                             title="View Recipe",
                             viewer=viewer,
                             voted_up_by_viewer=voted_up_by_viewer)
