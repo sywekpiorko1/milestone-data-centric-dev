@@ -2,6 +2,33 @@
 
 {% block main_content %}
 
-<h1>Index of COOKBOOK</h1>
+<div class="container-width350 center">
+  
+  <h4>Welcome {{ viewer }}</h4>
+  <br>
+  <P>to online cooking recipes database which consists recipes from various categories and cuisines around the world.</P>
+  <br>
+  <p>Feel free using ours CooKBooK, You can explore <div class="chip"><a class="linked" href="{{ url_for('get_recipes', limit=8, offset=0) }}">ALL</a></div> or&nbsp; <div class="chip"><a href="{{ url_for('search_recipes') }}">SEARCH/FILTER</a></div> existing recipes.</p>
+  <br>
+
+  {% if viewer == 'anonim' %}
+  
+  <p>If You want add Your own recipe or Upvote existing You will have to <div class="chip"><a href="{{ url_for('login') }}">LOGIN</a></div> or&nbsp; <div class="chip"><a href="{{ url_for('register') }}">REGISTER</a></div></p>
+  
+  {% else %}
+  
+  <p>To see recipes created or upvoted by You please visit Your <div class="chip"><a href="{{ url_for('profile', user=viewer) }}">PROFILE PAGE</a></div></p>
+  <p>If You have some fresh ideas please <div class="chip"><a href="{{ url_for('add_recipe') }}">ADD RECIPE</a></div></p>
+
+  {% if viewer == 'admin' %}
+  <p>MAIN ADMIN POWER is that You can always edit or delete ANY recipe in single recipe view.</p>
+  {% else %}
+  <p>Of Course You can always edit or delete Your own recipes in single recipe view.</p> 
+  {% endif %}
+
+  {% endif %}
+
+</div>
+
 
 {% endblock main_content %}

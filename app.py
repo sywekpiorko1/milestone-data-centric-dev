@@ -43,8 +43,15 @@ p_limit = 8
 @app.route('/')
 @app.route('/index')
 def index():
+    viewer = 'anonim'
+    if 'user' in session:
+        user_in_db = users_collection.find_one({"username": session['user']})
+        print ("USER: ", user_in_db['username'])
+        if user_in_db:
+            viewer = user_in_db['username']
     return render_template("index.html",
-                            title="COOKBOOK")
+                            title="COOKBOOK",
+                            viewer=viewer)
 
 
 @app.route('/recipes')
@@ -121,11 +128,23 @@ def view_recipe(recipe_id):
         voted_up_by_viewer = True
     else:
         voted_up_by_viewer = False
+
     # adjust youtube link to allow to be embeded on page
-    try:
-        recipe_video = recipe['youtube'].replace("watch?v=","embed/")
-    except:
-        recipe_video = None
+    keySentence1 = "youtu.be/"
+    keySentence2 = "watch?v="
+    leftPartOfLink = "https://www.youtube.com/embed/"
+    def substring_after(youtubeLink, delim, delim1, many):
+        if delim in youtubeLink:
+            after = youtubeLink.partition(delim)[2]
+            return str(leftPartOfLink + (after[:many]))
+        elif delim1 in youtubeLink: 
+            after = youtubeLink.partition(delim1)[2]
+            return str(leftPartOfLink + (after[:many]))
+        else:
+            return None
+    
+    recipe_video = substring_after(recipe['youtube'], keySentence1, keySentence2, 11)
+        #    recipe['youtube'].replace("watch?v=","embed/")
 
     return render_template("view_recipe.html",
                             recipe=recipe,
@@ -425,13 +444,8 @@ def update_recipe(recipe_id):
         'youtube':request.form.get('youtube'),
         'photo':request.form.get('photo')
     } )
-    recipe = recipes_collection.find_one({"_id": ObjectId(recipe_id)}) 
+    return redirect(url_for('view_recipe', recipe_id=recipe_id))
 
-    return render_template("view_recipe.html",
-                        recipe=recipe,
-                        title="View Recipe",
-                        viewer=session['user'],
-                        voted_up_by_viewer=False)
 
 @app.route('/deleteRecipe/<recipe_id>', methods=['GET', 'POST'])
 def delete_recipe(recipe_id):
@@ -469,6 +483,7 @@ def login():
 @app.route('/user_auth', methods=['POST'])
 def user_auth():
     form = request.form.to_dict()
+    form['username'] = form['username'].lstrip().rstrip()
     user_in_db = users_collection.find_one({"username": form['username']})
     # Search for user in database
     if user_in_db:
@@ -500,6 +515,7 @@ def register():
         return redirect(url_for('index'))
     if request.method == 'POST':
         form = request.form.to_dict()
+        form['username'] = form['username'].lstrip().rstrip()
         # Check if password and password1 match
         if form['user_password'] == form['user_password1']:
             # If so look for user in db
@@ -552,7 +568,10 @@ def logout():
 @app.route('/profile/<user>')
 def profile(user):
     # Check if user is not logged in already
-    if 'user' in session:
+    if user == session['user']:
+    # if 'user' in session:
+        print(user)
+        print(session['user'])
         # If so get the user and pass him to template for now
         user_in_db = users_collection.find_one({"username": user})
         # prepare list of recipes created by user
@@ -590,7 +609,7 @@ def profile(user):
                                 upvoted_recipes=upvoted_recipes,
                                 user=user_in_db)
     else:
-        flash("You must be logged in!")
+        flash("You must be logged in or You access wrong link...")
         return redirect(url_for('index'))
 
 

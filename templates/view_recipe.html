@@ -3,12 +3,16 @@
 <section class="container-width750 section">
   <div class="row">
     {% if viewer != 'anonim' and viewer !=recipe.author %}
-    {% if voted_up_by_viewer %}
-    <p class="margin0 right-align teal-text">You upvoted this recipe !!!</p>
-    {% else %}
-    <p class="margin0 right-align teal-text"><small>You can upvote this recipe</small></p>
-    <p class="margin0 right-align teal-text"><small>by pressing THUMB UP at bottom of page !</small></p>
-    {% endif %}
+
+      {% if voted_up_by_viewer %}
+      <p class="margin0 right-align teal-text">You upvoted this recipe !!!</p>
+      {% else %}
+      <p class="margin0 right-align teal-text"><small>You can upvote this recipe</small></p>
+      <p class="margin0 right-align teal-text"><small>by pressing THUMB UP at bottom of page !</small></p>
+      {% endif %}
+
+    {% elif viewer == 'anonim'  %}
+    <p class="margin0 right-align teal-text">Plese <a href="{{ url_for('login') }}">LOGIN</a>  or  <a href="{{ url_for('register') }}">REGISTER</a>  to upvote...</p>
     {% else %}
     <p class="margin0 right-align teal-text">You can't upvote this recipe as author...</p>
     {% endif %}
@@ -39,6 +43,18 @@
       </div>
     </div>
   </div>
+  
+  <!-- allergens chips -->
+  {% if recipe.allergens %}
+  <div class="row center-align">
+    <h6 class="red-text">ALLERGENS:</h6>
+    {% for allergen in recipe.allergens %}
+    <div class="chip orange">
+      {{ allergen }}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
 
   <!-- TABS -->
   <div class="row">
@@ -76,20 +92,20 @@
         </div>
         {% if recipe_video %}
         <div class="col s12">
-          <!-- <p>{{ recipe.youtube }}</p>
-          <p>{{ recipe_video }}</p> -->
+          <p>recipe.youtube >> &nbsp;{{ recipe.youtube }}</p>
+          <p>recipe_video >> &nbsp;{{ recipe_video }}</p>
           <div class="video-container">
               <iframe src="{{ recipe_video }}" allowfullscreen="" width="853" frameborder="0"></iframe>
             </div>
         </div>
         {% endif %}
-      </div>
+      </div> 
     </div>
   </div>
 
   <br>
 
-  <!-- button at bottom of page -->
+  <!-- buttons at bottom of page -->
   <div class="row">
 
     <!-- EDIT -->

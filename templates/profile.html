@@ -2,8 +2,10 @@
 
 <div class="row">
   <div class="center-align">
-    <h3>Welcome {{ user.username }}</h3>
+    <h4>Profile page: {{ user.username }}</h4>
   </div>
+  
+  {% if profile_user_recipes or upvoted_recipes %}
   <div class="container-wide">
     {% if profile_user_recipes %}
     <ul class="collection with-header">
@@ -43,6 +45,10 @@
     </ul>
     {% endif %}
   </div>
+  {% else %}
+  <p class="margin0 center-align teal-text"><small>Once You create or upvote recipe(s)</small></p>
+  <p class="margin0 center-align teal-text"><small>it will be accessible in this place :)</small></p>
+  {% endif %}
 </div>
 
 
