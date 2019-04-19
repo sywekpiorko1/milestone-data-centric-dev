@@ -77,7 +77,7 @@
           {% endfor %}
         </div>
         <div class="margin-up col s6 offset-s3 l4 offset-l2">
-          <img src="{{ recipe.photo }}" alt="{{ recipe.meal }}" class="responsive-img materialboxed z-depth-3">
+          <img src="{{ recipe.photo }}" alt="{{ recipe.meal }}" class="responsive-img materialboxed z-depth-3" data-caption="{{ recipe.meal }}">
         </div>
       </div>
     </div>
@@ -92,8 +92,8 @@
         </div>
         {% if recipe_video %}
         <div class="col s12">
-          <p>recipe.youtube >> &nbsp;{{ recipe.youtube }}</p>
-          <p>recipe_video >> &nbsp;{{ recipe_video }}</p>
+          <!-- <p>recipe.youtube >> &nbsp;{{ recipe.youtube }}</p>
+          <p>recipe_video >> &nbsp;{{ recipe_video }}</p> -->
           <div class="video-container">
               <iframe src="{{ recipe_video }}" allowfullscreen="" width="853" frameborder="0"></iframe>
             </div>
@@ -137,9 +137,10 @@
 
       <div class="modal" id="removeModal">
         <div class="modal-content">
-          <i class="large red-text material-icons">error_outline</i>
-          <!-- <h4 class="red-text">WARNING</h4> -->
-          <h4>Do You want to delete recipe permanently ?</h4>
+          <div class="center">
+            <i class="large red-text material-icons">error_outline</i>
+            <h4>Do You want to delete recipe permanently ?</h4>
+          </div>
         </div>
         <div class="modal-footer">
           <a href="{{ url_for('delete_recipe', recipe_id=recipe._id) }}" class="btn red" title="REMOVE">YES - DELETE</a>
@@ -148,6 +149,7 @@
       </div>
       {% endif %}
     </div>
+
   </div>
   <div class="row">
     <div class="col s4 m4 l4">

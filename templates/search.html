@@ -7,23 +7,25 @@
     <form action="{{ url_for('search_recipes') }}" method="POST" class="input-field col s12">
 
       <!--                              ALLERGENS CHECKBOXES -->
-      <div class="row">
+      <div id="red-bottom" class="row">
         <div class="row">
           <div class="col">
             <i class="small material-icons prefix">warning</i>
-            <span class="padded-from-left red-text"><strong> AVOID FOLLOWING ALLERGENS in results</strong></span>
+            <span class="padded-from-left red-text"><strong> EXCLUDE checked allergens in results</strong></span>
           </div>
         </div>
-        <div class="col offset-s2">
-          {% for allergen in allergens %}
-          <div class="col s12 m6">
-            <input name="allergens" value="{{allergen.allergen_name}}" type="checkbox" class="filled-in" id="{{allergen.allergen_name}}" />
-            <label for="{{allergen.allergen_name}}">{{allergen.allergen_name}}</label>
-          </div>
-          {% endfor %}
+        {% for allergen in allergens %}
+        <div class="col s5 offset-s1 l3">
+          <p>
+            <label for="{{allergen.allergen_name}}">
+              <input type="checkbox" id="{{allergen.allergen_name}}" class="filled-in" name="allergens"
+                value="{{allergen.allergen_name}}">
+              <span>{{allergen.allergen_name}}</span>
+            </label>
+          </p>
         </div>
+        {% endfor %}
       </div>
-      <br class="line-height-2">
       <!--                              TODO SEARCH WORD IN MEAL NAME -->
       <!--                              TODO SEARCH WORD IN INGREDIENTS -->
 

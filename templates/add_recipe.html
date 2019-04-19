@@ -1,5 +1,5 @@
 {% extends 'base.html' %} {% block main_content %}
-<div class="container-wide" style="margin-top: 20px">
+<div class="container-wide z-depth-3" style="margin-top: 20px">
   <div class="card-action">
     <a href="#" onclick="history.go(-1)">BACK</a>
   </div>
@@ -11,8 +11,8 @@
       <div class="row">
         <div class="input-field col s12 m6">
           <i class="material-icons prefix">room_service</i>
-          <input id="meal" name="meal" type="text" class="validate" required>
-          <label for="icon_prefix">Meal Name</label>
+          <input placeholder="input meal name" id="meal" name="meal" type="text" class="validate" required>
+          <label for="meal">Meal Name</label>
         </div>
         <div class="input-field col s12 m6">
           <i class="material-icons prefix">category</i>
@@ -50,9 +50,8 @@
       <div class="row">
         <div class="input-field col s12">
           <i class="material-icons prefix">scatter_plot</i>
-          <!-- <input id="ingredients" name="ingredients" type="text" class="validate" required> -->
-          <textarea id="textarea1" name="ingredients" class="materialize-textarea validate" required></textarea>
-          <label for="icon_prefix">Ingredients (separated by COMMAS)</label>
+          <textarea id="textarea1" name="ingredients" class="materialize-textarea validate" placeholder="(separated by COMMAS)" required></textarea>
+          <label for="textarea1">Ingredients</label>
         </div>
       </div>
 
@@ -60,8 +59,8 @@
       <div class="row">
         <div class="input-field col s12">
           <i class="material-icons prefix">format_list_numbered</i>
-          <textarea id="textarea2" name="instructions" class="materialize-textarea validate" required></textarea>
-          <label for="icon_telephone">Preparation Instructions (separated and finished with DOTS)</label>
+          <textarea id="textarea2" name="instructions" class="materialize-textarea validate" placeholder="(separated and ending by DOTS)" required></textarea>
+          <label for="textarea2">Preparation Instructions</label>
         </div>
       </div>
 
@@ -73,15 +72,17 @@
             <span class="padded-from-left"><strong> Allergens in meal</strong></span>
           </div>
         </div>
-        <div class="col offset-s2">
-          {% for allergen in allergens %}
-          <div class="col s12 m6">
-            <input name="allergens" value="{{allergen.allergen_name}}" type="checkbox" class="filled-in"
-              id="{{allergen.allergen_name}}" />
-            <label for="{{allergen.allergen_name}}">{{allergen.allergen_name}}</label>
-          </div>
-          {% endfor %}
+        {% for allergen in allergens %}
+        <div class="col s5 offset-s1 l3">
+          <p>
+            <label for="{{allergen.allergen_name}}">
+              <input type="checkbox" id="{{allergen.allergen_name}}" class="filled-in" name="allergens"
+                value="{{allergen.allergen_name}}" />
+              <span>{{allergen.allergen_name}}</span>
+            </label>
+          </p>
         </div>
+        {% endfor %}
       </div>
 
       <!--                                YOUTUBE LINK -->
@@ -90,12 +91,12 @@
         <div class="input-field col s12 l6">
           <i class="material-icons prefix">movie</i>
           <input id="youtube" name="youtube" type="text" class="validate" required>
-          <label for="icon_prefix">Youtube link</label>
+          <label for="youtube">Youtube link</label>
         </div>
         <div class="input-field col s12 l6">
           <i class="material-icons prefix">insert_photo</i>
           <input id="photo" name="photo" type="text" class="validate" required>
-          <label for="icon_prefix">Photo link</label>
+          <label for="photo">Photo link</label>
         </div>
       </div>
 

@@ -12,7 +12,7 @@
         <div class="input-field col s12 m6">
           <i class="material-icons prefix">room_service</i>
           <input id="meal" name="meal" value="{{ recipe.meal }}" type="text" class="validate" required>
-          <label for="icon_prefix">Meal Name</label>
+          <label for="meal">Meal Name</label>
         </div>
         <div class="input-field col s12 m6">
           <i class="material-icons prefix">category</i>
@@ -70,7 +70,7 @@
           <i class="material-icons prefix">format_list_numbered</i>
           <textarea id="textarea2" name="instructions" class="materialize-textarea validate"
             required>{{ recipe.instructions }}</textarea>
-          <label for="icon_telephone">Preparation Instructions (separated and finished with DOTS)</label>
+          <label for="icon_telephone">Instructions (separated by DOTS)</label>
         </div>
       </div>
 
@@ -82,15 +82,16 @@
             <span class="padded-from-left"><strong> Allergens in meal</strong></span>
           </div>
         </div>
-        <div class="col offset-s2">
-          {% for allergen in allergens %}
-          <div class="col s12 m6">
-            <input name="allergens" value="{{allergen.allergen_name}}" type="checkbox" class="filled-in"
-              id="{{allergen.allergen_name}}" {% if allergen.allergen_name in recipe.allergens %} checked {% endif %} />
-            <label for="{{allergen.allergen_name}}">{{allergen.allergen_name}}</label>
-          </div>
-          {% endfor %}
+        {% for allergen in allergens %}
+        <div class="col s5 offset-s1 l3">
+          <p>
+            <label for="{{allergen.allergen_name}}">
+              <input type="checkbox"  id="{{allergen.allergen_name}}" class="filled-in" name="allergens" value="{{allergen.allergen_name}}" {% if allergen.allergen_name in recipe.allergens %} checked {% endif %} />
+              <span>{{allergen.allergen_name}}</span>
+            </label>
+          </p>
         </div>
+        {% endfor %}
       </div>
 
       <!--                                YOUTUBE LINK -->

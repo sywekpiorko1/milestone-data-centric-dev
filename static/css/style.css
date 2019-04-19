@@ -89,7 +89,7 @@ main {
 
 /* https://www.jquery-az.com/5-styles-materialize-checkbox-custom-checkedunchecked/ */
 
-[type="checkbox"].filled-in:checked+label:not(.lever):after {
+[type="checkbox"].filled-in:checked + span:not(.lever):after {
   top: 0;
   width: 20px;
   height: 20px;
@@ -98,9 +98,9 @@ main {
   z-index: 0;
 }
 
-.fixed label {
+/* .fixed label {
   pointer-events: auto;
-}
+} */
 
 /* Flashed messages */
 
@@ -120,9 +120,11 @@ main {
 
 /* Search Template */
 
-br.line-height-2, li.line-height-2 {
-  line-height: 2.1;
+#red-bottom {
+  border-bottom: 1px solid red;
 }
+
+
 
 /* Cards */
 
