@@ -26,6 +26,19 @@ deleted_recipes_collection = mongo.db.deleted_recipes_collection
 allergens_collection = mongo.db.allergens_collection
 cuisine_collection = mongo.db.cuisine_collection
 
+
+# Lists for selects
+_categories = category_collection.find()
+category_list = [category for category in _categories]
+category_list_sorted = sorted(category_list, key=itemgetter('category_name'))
+
+_allergens = allergens_collection.find()
+allergen_list = [allergen for allergen in _allergens]
+
+_cuisines = cuisine_collection.find()
+cuisine_list = [cuisine for cuisine in _cuisines]
+cuisine_list_sorted = sorted(cuisine_list, key=itemgetter('cuisine_name'))
+
 # global variables used to share data between edit_recipe and update_recipe
 author_global = "None!"
 views_global = 0
@@ -79,20 +92,6 @@ def get_recipes():
     if p_offset > recipes_total:
         p_offset = recipes_total
 
-    # Query recipes collection and return ordered by votes descending
-    filteredRecipes = [recipe for recipe in recipes_collection.find(
-                        {
-                            '$query':
-                                {'meal': { '$regex': '.'} },
-                                '$orderby': {'views': -1}
-                            }
-                        )]
-    print("Top 5 recipes [name] order by [views] :  ")
-    for index,recipe in enumerate(filteredRecipes):
-        print(recipe['meal'], recipe['views']) 
-        if index == 5:
-            break   
-
     # Default sort by ID >> greater id for last added to dbase 
     recipes = list(recipes_collection.find().sort('_id').limit(p_limit).skip(p_offset))
     return render_template("recipes.html",
@@ -130,9 +129,10 @@ def view_recipe(recipe_id):
         voted_up_by_viewer = False
 
     # adjust youtube link to allow to be embeded on page
-    keySentence1 = "youtu.be/"
-    keySentence2 = "watch?v="
-    leftPartOfLink = "https://www.youtube.com/embed/"
+    keySentence1 = "youtu.be/" # youtuube link from android app
+    keySentence2 = "watch?v=" # youtube link from web browser
+    leftPartOfLink = "https://www.youtube.com/embed/" # left part of velid link
+    # create rught part of link 
     def substring_after(youtubeLink, delim, delim1, many):
         if delim in youtubeLink:
             after = youtubeLink.partition(delim)[2]
@@ -198,20 +198,8 @@ def remove_vote_up(recipe_id, viewer):
     return redirect(request.referrer)
 
 
-@app.route('/searchRecipes', methods=['GET', 'POST'])
-def search_recipes():
-
-    _categories = category_collection.find()
-    category_list = [category for category in _categories]
-    category_list_sorted = sorted(category_list, key=itemgetter('category_name'))
-
-    _cuisines = cuisine_collection.find()
-    cuisine_list = [cuisine for cuisine in _cuisines]
-    cuisine_list_sorted = sorted(cuisine_list, key=itemgetter('cuisine_name'))
-    
-    _allergens = allergens_collection.find()
-    allergen_list = [allergen for allergen in _allergens]
-    
+@app.route('/filterRecipes', methods=['GET', 'POST'])
+def filter_recipes():
 
     if request.method == 'POST':
         form = request.form.to_dict()
@@ -236,6 +224,11 @@ def search_recipes():
                 search_filter[key] = form[key]
                 filters.append(search_filter)
         # check if selectoin made - if not - display warning
+        print("Filter (category or cuisine) :", filters)
+        # [{'mealName': 'beef'}]
+        print("Filters (do not display allergens) :", exclusion)
+        # []
+
         if filters or exclusion:
             # Create 2 queries
             recipes_with_allowed_allergens = list(recipes_collection.aggregate([
@@ -265,28 +258,28 @@ def search_recipes():
                                     category=category_collection.find(),
                                     count=count,
                                     cuisine=cuisine_collection.find(),
-                                    next_url=f"/searchRecipesPaginated?limit={str(p_limit)}&offset={str(p_offset + p_limit)}",
-                                    prev_url=f"/searchRecipesPaginated?limit={str(p_limit)}&offset={str(p_offset - p_limit)}",
+                                    next_url=f"/filterRecipesPaginated?limit={str(p_limit)}&offset={str(p_offset + p_limit)}",
+                                    prev_url=f"/filterRecipesPaginated?limit={str(p_limit)}&offset={str(p_offset - p_limit)}",
                                     p_limit=p_limit,
                                     p_offset=p_offset,
                                     recipes=recipes,
                                     title="Filtered Recipes")
         else:
-            flash("Choose something before search!")
-            return render_template('search.html',
+            flash("Choose something before filter!")
+            return render_template('filter.html',
                                 allergens=allergen_list,
                                 categories=category_list_sorted,
                                 cuisines=cuisine_list_sorted,
                                 title="Search again")
 
-    return render_template('search.html',
+    return render_template('filter.html',
                            allergens=allergen_list, 
                            categories=category_list_sorted,
                            cuisines=cuisine_list_sorted,
                            title="Search")
 
-@app.route('/searchRecipesPaginated')
-def search_recipes_paginated():
+@app.route('/filterRecipesPaginated')
+def filtered_recipes_paginated():
     # Pagination
     # Request the limit from link
     p_limit = int(request.args['limit'])
@@ -307,8 +300,8 @@ def search_recipes_paginated():
                         category=category_collection.find(),
                         count=count,
                         cuisine=cuisine_collection.find(),
-                        next_url=f"/searchRecipesPaginated?limit={str(p_limit)}&offset={str(p_offset + p_limit)}",
-                        prev_url=f"/searchRecipesPaginated?limit={str(p_limit)}&offset={str(p_offset - p_limit)}",
+                        next_url=f"/filterRecipesPaginated?limit={str(p_limit)}&offset={str(p_offset + p_limit)}",
+                        prev_url=f"/filterRecipesPaginated?limit={str(p_limit)}&offset={str(p_offset - p_limit)}",
                         p_limit=p_limit,
                         p_offset=p_offset,
                         recipes=recipes,
@@ -321,17 +314,6 @@ def add_recipe():
     if 'user' in session:
         user_in_db = users_collection.find_one({"username": session['user']})
         if user_in_db:
-
-            _categories = category_collection.find()
-            category_list = [category for category in _categories]
-            category_list_sorted = sorted(category_list, key=itemgetter('category_name'))
-
-            _allergens = allergens_collection.find()
-            allergen_list = [allergen for allergen in _allergens]
-
-            _cuisines = cuisine_collection.find()
-            cuisine_list = [cuisine for cuisine in _cuisines]
-            cuisine_list_sorted = sorted(cuisine_list, key=itemgetter('cuisine_name'))
 
             return render_template('add_recipe.html',
                                    allergens=allergen_list,
@@ -388,19 +370,8 @@ def edit_recipe(recipe_id):
                 upvotes_global = the_recipe['upvotes']
                 global upvotes_who_global
                 upvotes_who_global = list(the_recipe['upvotes_who'])
-
-                _categories = category_collection.find()
-                category_list = [category for category in _categories]
-                category_list_sorted = sorted(category_list, key=itemgetter('category_name'))
                 
                 ingredients_list_to_string = (','.join(the_recipe['ingredients']))
-
-                _allergens = allergens_collection.find()
-                allergen_list = [allergen for allergen in _allergens]
-
-                _cuisines = cuisine_collection.find()
-                cuisine_list = [cuisine for cuisine in _cuisines]
-                cuisine_list_sorted = sorted(cuisine_list, key=itemgetter('cuisine_name'))
 
                 return render_template('edit_recipe.html',
                                         allergens=allergen_list,

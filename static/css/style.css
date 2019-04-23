@@ -117,11 +117,11 @@ main {
 }
 
 /* Pagination  */
-
+/* and */
 /* Search Template */
 
-#red-bottom {
-  border-bottom: 1px solid red;
+br.line-height-2, li.line-height-2 {
+  line-height: 2.1;
 }
 
 
