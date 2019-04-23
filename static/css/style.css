@@ -40,7 +40,7 @@ main {
 
 .container-mainpage {
   width:90%; 
-  max-width: 1280px;
+  max-width: 1880px;
 }
 
 .container-width350 {
@@ -61,6 +61,11 @@ main {
   height: auto;
   box-sizing: border-box;
   position: relative;
+}
+
+.white-background {
+  background: white;
+  border-radius: 20px;
 }
 
 /* .container-width550 {

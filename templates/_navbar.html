@@ -5,7 +5,6 @@
         height="auto" style="margin-top: -0.2rem"></a>
     <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
     <ul class="right hide-on-med-and-down">
-      <li><a href="{{ url_for('filter_recipes') }}"><i class="material-icons">filter_list</i></a></li>
       <li><a href="{{ url_for('get_recipes', limit=8, offset=0) }}">ALL RECIPES</a></li>
       {% if session.user %}
       <li><a href="{{ url_for('add_recipe') }}">ADD RECIPE</a></li>
@@ -29,8 +28,7 @@
 <ul class="sidenav" id="mobile-demo">
   <li><a href="{{ url_for('index') }}" class="brand-logo left"><img src="..\static\images\logo1.png" width="210"
         height="auto" style="margin-left: 2rem"></a></li>
-  <li><a href="{{ url_for('filter_recipes') }}" style="margin-top: 8rem"><i class="material-icons">filter_list</i>FILTER</a></li>
-  <li><a href="{{ url_for('get_recipes', limit=8, offset=0) }}"><i class="material-icons">receipt</i>ALL RECIPES</a></li>
+  <li><a href="{{ url_for('get_recipes', limit=8, offset=0) }}" style="margin-top: 8rem"><i class="material-icons">receipt</i>ALL RECIPES</a></li>
   {% if session.user %}
   <li><a href="{{ url_for('add_recipe') }}"><i class="material-icons">control_point</i>ADD RECIPE</a></li>
   <li class="{% if 'profile' in request.path %} active {% endif %}"><a

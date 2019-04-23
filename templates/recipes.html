@@ -1,59 +1,80 @@
 {% extends 'base.html' %} {% block main_content %}
 
+
 <div class="container container-mainpage">
 
-  {% if count == 0 %}
-  <h3 class="center-align">Sorry, we have no recipes matching criteria.</h3>
-  <h3 class="center-align">Try another search.</h3>
-  {% else %}
-  <h6 class="left-align">Found&nbsp;{{ count }}
-    {% if count > 1 %}
-    recipes
-    {% else %}
-    recipe
-    {% endif %}
-    in DB.</h6>
-  {% endif %}
+  <!-- Pagination on TOP -->
 
-  <ul class="pagination center-align">
-    {% if p_offset > 0 %}
-    <li class="waves-effect"><a href="{{ prev_url }}"><i class="material-icons">chevron_left</i></a></li>
-    {% endif %}
-    {% if (p_offset > 0) or (p_offset + p_limit <  count) %}
-    <li class="line-height-2">
-      page {{ ( p_offset // p_limit )  + 1 }} of
-      {% if count % p_limit == 0 %}
-      {{ (count // p_limit) }}
+  <div class="row">
+    <div class="col l9 offset-l3 m12 s12">
+
+      {% if count == 0 %}
+      <h3 class="center-align">Sorry, we have no recipes matching criteria.</h3>
+      <h3 class="center-align">Try another search.</h3>
       {% else %}
-      {{ ( count // p_limit) + 1 }}
+      <h6 class="left-align">Found&nbsp;{{ count }}
+        {% if count > 1 %}
+        recipes
+        {% else %}
+        recipe
+        {% endif %}
+        in DB.</h6>
       {% endif %}
-    </li>
-    {% endif %}
-    {% if p_offset + p_limit <  count %}
-    <li class="waves-effect"><a href="{{ next_url }}"><i class="material-icons">chevron_right</i></a></li>
-    {% endif %}
-  </ul>
 
-  <div class="row cards">
-
-    {% for recipe in recipes %}
-
-    {% include "recipesTemplateCards.html"  %}
-
-    {% endfor %}
-
+      <ul class="pagination center-align">
+        {% if p_offset > 0 %}
+        <li class="waves-effect"><a href="{{ prev_url }}"><i class="material-icons">chevron_left</i></a></li>
+        {% endif %}
+        {% if (p_offset > 0) or (p_offset + p_limit <  count) %}
+        <li class="line-height-2">
+          page {{ ( p_offset // p_limit )  + 1 }} of
+          {% if count % p_limit == 0 %}
+          {{ (count // p_limit) }}
+          {% else %}
+          {{ ( count // p_limit) + 1 }}
+          {% endif %}
+        </li>
+        {% endif %}
+        {% if p_offset + p_limit <  count %}
+        <li class="waves-effect"><a href="{{ next_url }}"><i class="material-icons">chevron_right</i></a></li>
+        {% endif %}
+      </ul>
+    </div>
   </div>
 
-  {% if  (count - p_offset) > 4  %}
-  <ul class="pagination center-align">
-    {% if p_offset > 0 %}
-    <li class="waves-effect"><a href="{{ prev_url }}"><i class="material-icons">chevron_left</i></a></li>
-    {% endif %}
+  <!-- SEARCH / FILTER -->
+  <div class="row">
 
-    {% if p_offset + p_limit <  count %}
-    <li class="waves-effect"><a href="{{ next_url }}"><i class="material-icons">chevron_right</i></a></li>
+    <div class="col s12 m12 l3 z-depth-3 white-background">
+      {% include "_filter.html"  %}
+    </div>
+
+    <!-- RECIPES CARDS -->
+
+    <div class="col cards s12 m12 l9">
+
+      {% for recipe in recipes %}
+
+      {% include "recipesTemplateCards.html"  %}
+
+      {% endfor %}
+
+    </div>
+  </div>
+
+  <!-- Pagination on BOTTOM -->
+  <div class="row">
+    {% if  (count - p_offset) > 4  %}
+    <ul class="pagination center-align">
+      {% if p_offset > 0 %}
+      <li class="waves-effect"><a href="{{ prev_url }}"><i class="material-icons">chevron_left</i></a></li>
+      {% endif %}
+
+      {% if p_offset + p_limit <  count %}
+      <li class="waves-effect"><a href="{{ next_url }}"><i class="material-icons">chevron_right</i></a></li>
+      {% endif %}
+    </ul>
     {% endif %}
-  </ul>
-  {% endif %}
+  </div>
 
   {% endblock main_content %}
