@@ -8,19 +8,6 @@
   <div class="row">
     <div class="col l9 offset-l3 m12 s12">
 
-      {% if count == 0 %}
-      <h3 class="center-align">Sorry, we have no recipes matching criteria.</h3>
-      <h3 class="center-align">Try another search.</h3>
-      {% else %}
-      <h6 class="left-align">Found&nbsp;{{ count }}
-        {% if count > 1 %}
-        recipes
-        {% else %}
-        recipe
-        {% endif %}
-        in DB.</h6>
-      {% endif %}
-
       <ul class="pagination center-align">
         {% if p_offset > 0 %}
         <li class="waves-effect"><a href="{{ prev_url }}"><i class="material-icons">chevron_left</i></a></li>
@@ -42,11 +29,38 @@
     </div>
   </div>
 
-  <!-- SEARCH / FILTER -->
   <div class="row">
 
+    <!-- FILTER and SEARCH -->
+
     <div class="col s12 m12 l3 z-depth-3 white-background">
+
+        {% if count == 0 %}
+        <h6 class="center-align">Sorry, we have no recipes matching criteria.</h6>
+        <h6 class="center-align">Try another search.</h6>
+        {% else %}
+        <h6 class="center-align">Found&nbsp;{{ count }}
+          {% if count > 1 %}
+          recipes
+          {% else %}
+          recipe
+          {% endif %}
+          in CookBook.</h6>
+        {% endif %}
+
       {% include "_filter.html"  %}
+
+      {% include "_search.html" %}
+
+      <div class="center">
+        <div class="row">
+          <button class="btn btn waves-seffect waves-light purple accent-2 z-depth-3 myClicableBox" type="button"><a
+              href="{{ url_for('get_recipes', limit=8, offset=0) }} " class="white-text">ALL RECIPES</a>
+            <i class="material-icons right">cached</i>
+          </button>
+        </div>
+      </div>
+
     </div>
 
     <!-- RECIPES CARDS -->

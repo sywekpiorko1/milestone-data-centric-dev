@@ -1,0 +1,16 @@
+<form action="{{ url_for('search_recipes') }}" method="POST" class="input-field col s12">
+  <div class="row z-depth-1" style="border:#cccccc solid 1px;">
+    <div class="input-field col s12 m6">
+      <input placeholder="in meal name" id="word_in_meal" name="word_in_meal" type="text">
+      <label for="word_in_meal">Search for word</label>
+    </div>
+    <div class="input-field col s12 m6">
+      <input placeholder="in ingredient" id="word_in_ingredient" name="word_in_ingredient" type="text">
+      <label for="word_in_ingredient">Search for word</label>
+    </div>
+    <div class="row center-align">
+      <button class="btn waves-effect waves-light" type="submit" name="action"><i
+          class="material-icons right">search</i>Search</button>
+    </div>
+  </div>
+</form>

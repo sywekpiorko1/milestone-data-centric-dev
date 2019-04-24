@@ -1,37 +1,35 @@
 <form action="{{ url_for('filter_recipes') }}" method="POST" class="input-field col s12">
 
   <!--                              ALLERGENS CHECKBOXES -->
-  <ul class="collapsible">
-    <li>
-      <div class="collapsible-header"><i class="material-icons">warning</i><span class="red-text">Allergy
-          sufferers
-          - expand ...</span></div>
-      <div class="collapsible-body">
-        <div id="red-bottom" class="row">
-          <div class="row">
-            <div class="col center">
-              <span class="padded-from-left red-text"><strong> check allergens to EXCLUDE in
-                  results</strong></span>
-            </div>
-          </div>
-          {% for allergen in allergens %}
-          <div class="col s5 offset-s1 l6">
-            <p>
-              <label for="{{allergen.allergen_name}}">
-                <input type="checkbox" id="{{allergen.allergen_name}}" class="filled-in" name="allergens"
-                  value="{{allergen.allergen_name}}">
-                <span>{{allergen.allergen_name}}</span>
-              </label>
-            </p>
-          </div>
-          {% endfor %}
-        </div>
-      </div>
-
-    </li>
-  </ul>
-
   <div class="row z-depth-1" style="border:#cccccc solid 1px;">
+    <ul class="collapsible">
+      <li>
+        <div class="collapsible-header"><i class="material-icons">warning</i><span class="red-text">Exclude some allergens</span></div>
+        <div class="collapsible-body">
+          <div class="row">
+            <!-- <div class="row">
+              <div class="col center">
+                <span class="padded-from-left red-text"><strong> check allergens to EXCLUDE in
+                    results</strong></span>
+              </div>
+            </div> -->
+            {% for allergen in allergens %}
+            <div class="col s5 offset-s1 l6">
+              <p>
+                <label for="{{allergen.allergen_name}}">
+                  <input type="checkbox" id="{{allergen.allergen_name}}" class="filled-in" name="allergens"
+                    value="{{allergen.allergen_name}}">
+                  <span>{{allergen.allergen_name}}</span>
+                </label>
+              </p>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
+      </li>
+    </ul>
+
     <br>
     <!--                              CATEGORY FROM LIST -->
     <div class="input-field col  l12 m12 s12">
@@ -56,15 +54,14 @@
       </select>
       <label>Filter by Cuisines</label>
     </div>
-  </div>
-  <br class="line-height-2">
+    <div class="row center-align">
+      <button class="btn btn waves-seffect waves-light blue darken-4 z-depth-3" type="submit" name="action">Filter
+        <i class="material-icons right">filter_list</i>
+      </button>
+    </div>
 
-  <div class="row center-align">
-    <button class="btn btn-large waves-seffect waves-light blue darken-4 z-depth-3" type="submit" name="action">Filter
-      <i class="material-icons right">filter_list</i>
-    </button>
-    <button class="btn btn-large waves-seffect waves-light purple accent-2 z-depth-3" type="button"><a href="{{ url_for('get_recipes', limit=8, offset=0) }} " class="white-text">RESET</a>  
-      <i class="material-icons right">filter_list</i>
-    </button>
+
   </div>
+  <!-- <br class="line-height-2"> -->
+
 </form>

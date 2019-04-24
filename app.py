@@ -45,7 +45,7 @@ views_global = 0
 upvotes_global = 0
 upvotes_who_global = []
 filtered_and_excluded_allergens = []
-p_limit = 8
+searchedRecipes = []
 
 
 ######################################################################
@@ -209,52 +209,80 @@ def remove_vote_up(recipe_id, viewer):
 @app.route('/filterRecipes', methods=['GET', 'POST'])
 def filter_recipes():
 
-    form = request.form.to_dict()
-    if 'action' in form:
-        del form['action']
-    if 'allergens' in form:
-        form['allergens'] = request.form.getlist('allergens')
+    if request.method == 'POST':
+        form = request.form.to_dict()
+        if 'action' in form:
+            del form['action']
+        if 'allergens' in form:
+            form['allergens'] = request.form.getlist('allergens')
 
-    # Create a temporary lists for storing filters and exclusions
-    filters = list()
-    exclusion = list()
-    # Loop through each of the form keys
-    for key in form:
-        # Create temporary dictionary to which will be our single filter
-        search_filter = dict()
-        # Create new k,v pairs in above dictionary
-        if key == 'allergens':
-            items = form[key]
-            for item in items:
-                exclusion.append(item)
-        else:
-            search_filter[key] = form[key]
-            filters.append(search_filter)
-    # check if selectoin made - if not - display warning
-    print("Filter (category or cuisine) :", filters)
-    # [{'mealName': 'beef'}]
-    print("Filters (do not display allergens) :", exclusion)
-    # []
+        # Create a temporary lists for storing filters and exclusions
+        filters = list()
+        exclusion = list()
+        # Loop through each of the form keys
+        for key in form:
+            # Create temporary dictionary to which will be our single filter
+            search_filter = dict()
+            # Create new k,v pairs in above dictionary
+            if key == 'allergens':
+                items = form[key]
+                for item in items:
+                    exclusion.append(item)
+            else:
+                search_filter[key] = form[key]
+                filters.append(search_filter)
 
-    if filters or exclusion:
-        # Create 2 queries
-        recipes_with_allowed_allergens = list(recipes_collection.aggregate([
-            {"$match": {"$and": [{'allergens': {"$nin": exclusion}}]}}]))
-        if filters:
-            recipes_filtered = list(recipes_collection.aggregate(
-                [{"$match": {"$and": filters}}]))
-        # combine results having common part in recipes_filtered and recipes_with_allowed_allergens
-        # keep results globally for pagination
-        global filtered_and_excluded_allergens
-        filtered_and_excluded_allergens = []
-        if filters:
-            for item in recipes_with_allowed_allergens:
-                if item in recipes_filtered:
-                    filtered_and_excluded_allergens.append(item)
+        print(f"Filter (category or cuisine) :{filters}) | Filters (do not display allergens) :{exclusion}")    
+
+        # check if selectoin made - if not - display warning
+        if filters or exclusion:
+            # Create 2 queries
+            recipes_with_allowed_allergens = list(recipes_collection.aggregate([
+                {"$match": {"$and": [{'allergens': {"$nin": exclusion}}]}}]))
+            if filters:
+                recipes_filtered = list(recipes_collection.aggregate(
+                    [{"$match": {"$and": filters}}]))
+            # combine results having common part in recipes_filtered and recipes_with_allowed_allergens
+            # keep results globally for pagination
+            global filtered_and_excluded_allergens
+            filtered_and_excluded_allergens = []
+            if filters:
+                for item in recipes_with_allowed_allergens:
+                    if item in recipes_filtered:
+                        filtered_and_excluded_allergens.append(item)
+            else:
+                filtered_and_excluded_allergens = recipes_with_allowed_allergens
+            # pagination for first page only
+            p_offset = 0
+            count = len(filtered_and_excluded_allergens)
+
+            p_limit = 8
+            recipes = (filtered_and_excluded_allergens)[p_offset:p_limit+p_offset]
+
+            return render_template("recipes.html",
+                                allergens=allergens_collection.find(),
+                                categories=category_list_sorted,
+                                count=count,
+                                cuisines=cuisine_list_sorted,
+                                next_url=f"/filterRecipes?limit={str(p_limit)}&offset={str(p_offset + p_limit)}",
+                                prev_url=f"/filterRecipes?limit={str(p_limit)}&offset={str(p_offset - p_limit)}",
+                                p_limit=p_limit,
+                                p_offset=p_offset,
+                                recipes=recipes,
+                                title="Filtered Recipes")
         else:
-            filtered_and_excluded_allergens = recipes_with_allowed_allergens
-        # pagination for first page only
-        p_offset = 0
+            flash("Choose something before hit FILTER")
+            return redirect(request.referrer)
+    else:
+        # Pagination
+        # Request the limit from link
+        p_limit = int(request.args['limit'])
+        # Request the offset from link
+        # make sure is 0 or more to avoid erver error
+        p_offset = int(request.args['offset'])
+        if p_offset < 0:
+            p_offset = 0
+        # make sure  is not bigger or equal than recipes count
         count = len(filtered_and_excluded_allergens)
         if p_offset > count:
             p_offset = count
@@ -262,50 +290,82 @@ def filter_recipes():
         recipes = (filtered_and_excluded_allergens)[p_offset:p_limit+p_offset]
 
         return render_template("recipes.html",
-                               allergens=allergens_collection.find(),
-                               categories=category_list_sorted,
-                               count=count,
-                               cuisines=cuisine_list_sorted,
-                               next_url=f"/filterRecipesPaginated?limit={str(p_limit)}&offset={str(p_offset + p_limit)}",
-                               prev_url=f"/filterRecipesPaginated?limit={str(p_limit)}&offset={str(p_offset - p_limit)}",
-                               p_limit=p_limit,
-                               p_offset=p_offset,
-                               recipes=recipes,
-                               title="Filtered Recipes")
+                            allergens=allergens_collection.find(),
+                            categories=category_list_sorted,
+                            count=count,
+                            cuisines=cuisine_list_sorted,
+                            next_url=f"/filterRecipes?limit={str(p_limit)}&offset={str(p_offset + p_limit)}",
+                            prev_url=f"/filterRecipes?limit={str(p_limit)}&offset={str(p_offset - p_limit)}",
+                            p_limit=p_limit,
+                            p_offset=p_offset,
+                            recipes=recipes,
+                            title="Filtered Recipes")
+
+
+@app.route('/searchRecipes', methods=['GET', 'POST'])
+def search_recipes():
+
+    if request.method == 'POST':
+        form = request.form.to_dict()
+        if 'action' in form:
+            del form['action']
+        inMealWord = form['word_in_meal']
+        inIngredWord = form['word_in_ingredient']
+
+        if not (inMealWord == '' and inIngredWord == ''):
+
+            global searchedRecipes
+            searchedRecipes = []
+            searchedRecipes = list(recipes_collection.find({ "$and" : [{ 'meal' :{'$regex':inMealWord, '$options':'i'}}, { 'ingredients' :{'$regex':inIngredWord, '$options':'i'}} ]}))
+            p_offset = 0
+            count = len(searchedRecipes)
+            
+            p_limit = 8
+            recipes = (searchedRecipes)[p_offset:p_limit+p_offset]
+
+            print(f"Type of results is  {type(searchedRecipes)} and it has {len(searchedRecipes)} items")
+            return render_template("recipes.html",
+                                    allergens=allergens_collection.find(),
+                                    categories=category_list_sorted,
+                                    count=count,
+                                    cuisines=cuisine_list_sorted,
+                                    next_url=f"/searchRecipes?limit={str(p_limit)}&offset={str(p_offset + p_limit)}",
+                                    prev_url=f"/searchRecipes?limit={str(p_limit)}&offset={str(p_offset - p_limit)}",
+                                    p_limit=p_limit,
+                                    p_offset=p_offset,
+                                    recipes=recipes,
+                                    title="Searched Recipes")
+            
+        else:
+            flash("Type in something before hit SEARCH")
+            return redirect(request.referrer)
     else:
-        flash("Choose something before hit FILTER")
-        return redirect(request.referrer)
+        # Pagination
+        # Request the limit from link
+        p_limit = int(request.args['limit'])
+        # Request the offset from link
+        # make sure is 0 or more to avoid erver error
+        p_offset = int(request.args['offset'])
+        if p_offset < 0:
+            p_offset = 0
+        # make sure  is not bigger or equal than recipes count
+        count = len(searchedRecipes)
+        if p_offset > count:
+            p_offset = count
 
+        recipes = (searchedRecipes)[p_offset:p_limit+p_offset]
 
-@app.route('/filterRecipesPaginated')
-def filtered_recipes_paginated():
-    # Pagination
-    # Request the limit from link
-    p_limit = int(request.args['limit'])
-    # Request the offset from link
-    # make sure is 0 or more to avoid erver error
-    p_offset = int(request.args['offset'])
-    if p_offset < 0:
-        p_offset = 0
-    # make sure  is not bigger or equal than recipes count
-    count = len(filtered_and_excluded_allergens)
-    if p_offset > count:
-        p_offset = count
-
-    recipes = (filtered_and_excluded_allergens)[p_offset:p_limit+p_offset]
-
-    return render_template("recipes.html",
-                           allergens=allergens_collection.find(),
-                           categories=category_list_sorted,
-                           count=count,
-                           cuisines=cuisine_list_sorted,
-                           next_url=f"/filterRecipesPaginated?limit={str(p_limit)}&offset={str(p_offset + p_limit)}",
-                           prev_url=f"/filterRecipesPaginated?limit={str(p_limit)}&offset={str(p_offset - p_limit)}",
-                           p_limit=p_limit,
-                           p_offset=p_offset,
-                           recipes=recipes,
-                           title="Filtered Recipes")
-
+        return render_template("recipes.html",
+                                    allergens=allergens_collection.find(),
+                                    categories=category_list_sorted,
+                                    count=count,
+                                    cuisines=cuisine_list_sorted,
+                                    next_url=f"/searchRecipes?limit={str(p_limit)}&offset={str(p_offset + p_limit)}",
+                                    prev_url=f"/searchRecipes?limit={str(p_limit)}&offset={str(p_offset - p_limit)}",
+                                    p_limit=p_limit,
+                                    p_offset=p_offset,
+                                    recipes=recipes,
+                                    title="Searched Recipes")
 
 @app.route('/addRecipe')
 def add_recipe():
