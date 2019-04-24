@@ -39,7 +39,7 @@ main {
 /* Login,Register form, Recipes, Recipe Details */
 
 .container-mainpage {
-  width:90%; 
+  width: 90%;
   max-width: 1880px;
 }
 
@@ -94,7 +94,7 @@ main {
 
 /* https://www.jquery-az.com/5-styles-materialize-checkbox-custom-checkedunchecked/ */
 
-[type="checkbox"].filled-in:checked + span:not(.lever):after {
+[type="checkbox"].filled-in:checked+span:not(.lever):after {
   top: 0;
   width: 20px;
   height: 20px;
@@ -122,14 +122,14 @@ main {
 }
 
 /* Pagination  */
+
 /* and */
+
 /* Search Template */
 
 br.line-height-2, li.line-height-2 {
   line-height: 2.1;
 }
-
-
 
 /* Cards */
 
@@ -173,7 +173,7 @@ br.line-height-2, li.line-height-2 {
 /* Section */
 
 .margin0 {
-  margin:0;
+  margin: 0;
 }
 
 .tabs .indicator {
@@ -188,4 +188,22 @@ br.line-height-2, li.line-height-2 {
 
 footer p {
   color: white;
+}
+
+@media (max-width: 992px) {
+  .filterSearch {
+    display: none;
+  }
+  #show {
+    display: inline-block;
+  }
+}
+
+@media (min-width: 992px) {
+  .filterSearch {
+    display: inline-block;
+  }
+  #show {
+    display: none;
+  }
 }

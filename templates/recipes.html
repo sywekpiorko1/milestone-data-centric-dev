@@ -1,13 +1,30 @@
 {% extends 'base.html' %} {% block main_content %}
 
+<div class="fixed-action-btn">
+  <a id="show" class="btn-floating btn">
+    <i class="large material-icons">search</i>
+  </a>
+</div>
 
 <div class="container container-mainpage">
+
+  {% if count == 0 %}
+  <h6 class="center-align">Sorry, we have no recipes matching criteria.</h6>
+  <h6 class="center-align">Try another search.</h6>
+  {% else %}
+  <h6 class="center-align">Found&nbsp;{{ count }}
+    {% if count > 1 %}
+    recipes
+    {% else %}
+    recipe
+    {% endif %}
+    in CookBook.</h6>
+  {% endif %}
 
   <!-- Pagination on TOP -->
 
   <div class="row">
     <div class="col l9 offset-l3 m12 s12">
-
       <ul class="pagination center-align">
         {% if p_offset > 0 %}
         <li class="waves-effect"><a href="{{ prev_url }}"><i class="material-icons">chevron_left</i></a></li>
@@ -33,20 +50,7 @@
 
     <!-- FILTER and SEARCH -->
 
-    <div class="col s12 m12 l3 z-depth-3 white-background">
-
-        {% if count == 0 %}
-        <h6 class="center-align">Sorry, we have no recipes matching criteria.</h6>
-        <h6 class="center-align">Try another search.</h6>
-        {% else %}
-        <h6 class="center-align">Found&nbsp;{{ count }}
-          {% if count > 1 %}
-          recipes
-          {% else %}
-          recipe
-          {% endif %}
-          in CookBook.</h6>
-        {% endif %}
+    <div class="filterSearch col s12 m12 l3 z-depth-3 white-background">
 
       {% include "_filter.html"  %}
 
@@ -78,17 +82,19 @@
 
   <!-- Pagination on BOTTOM -->
   <div class="row">
-    {% if  (count - p_offset) > 4  %}
-    <ul class="pagination center-align">
-      {% if p_offset > 0 %}
-      <li class="waves-effect"><a href="{{ prev_url }}"><i class="material-icons">chevron_left</i></a></li>
-      {% endif %}
+    <div class="col l9 offset-l3 m12 s12">
+      <ul class="pagination center-align">
+        {% if  (count - p_offset) > 4  %}
+        {% if p_offset > 0 %}
+        <li class="waves-effect"><a href="{{ prev_url }}"><i class="material-icons">chevron_left</i></a></li>
+        {% endif %}
 
-      {% if p_offset + p_limit <  count %}
-      <li class="waves-effect"><a href="{{ next_url }}"><i class="material-icons">chevron_right</i></a></li>
-      {% endif %}
-    </ul>
-    {% endif %}
+        {% if p_offset + p_limit <  count %}
+        <li class="waves-effect"><a href="{{ next_url }}"><i class="material-icons">chevron_right</i></a></li>
+        {% endif %}
+        {% endif %}
+      </ul>
+    </div>
   </div>
 
   {% endblock main_content %}
