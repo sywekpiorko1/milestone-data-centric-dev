@@ -66,6 +66,7 @@ def index():
                            title="COOKBOOK",
                            viewer=viewer)
 
+############################### RECIPES ###############################
 
 @app.route('/recipes')
 def get_recipes():
@@ -108,6 +109,7 @@ def get_recipes():
                            title="ALL Recipes",
                            viewer=viewer)
 
+############################### VIEW RECIPE ###############################
 
 @app.route('/viewRecipe/<recipe_id>')
 def view_recipe(recipe_id):
@@ -157,6 +159,7 @@ def view_recipe(recipe_id):
                            viewer=viewer,
                            voted_up_by_viewer=voted_up_by_viewer)
 
+############################### VOTE UP RECIPES ###############################
 
 @app.route('/voteUp/<recipe_id>/<viewer>')
 def vote_up(recipe_id, viewer):
@@ -181,6 +184,7 @@ def vote_up(recipe_id, viewer):
     flash("Recipe Upvoted")
     return redirect(request.referrer)
 
+############################### VOTE DOWN RECIPE ###############################
 
 @app.route('/removeVoteUp/<recipe_id>/<viewer>')
 def remove_vote_up(recipe_id, viewer):
@@ -205,6 +209,7 @@ def remove_vote_up(recipe_id, viewer):
     flash("Removed Recipe Upvote :(")
     return redirect(request.referrer)
 
+############################### FILTER RECIPES ###############################
 
 @app.route('/filterRecipes', methods=['GET', 'POST'])
 def filter_recipes():
@@ -276,11 +281,17 @@ def filter_recipes():
     else:
         # Pagination
         # Request the limit from link
-        p_limit = int(request.args['limit'])
+        try:
+            p_limit = int(request.args['limit'])
+        except:
+            p_limit=8
         # Request the offset from link
         # make sure is 0 or more to avoid erver error
-        p_offset = int(request.args['offset'])
-        if p_offset < 0:
+        try:
+            p_offset = int(request.args['offset'])
+            if p_offset < 0:
+                p_offset = 0
+        except:
             p_offset = 0
         # make sure  is not bigger or equal than recipes count
         count = len(filtered_and_excluded_allergens)
@@ -301,6 +312,7 @@ def filter_recipes():
                             recipes=recipes,
                             title="Filtered Recipes")
 
+############################### SEARCH RECIPES ###############################
 
 @app.route('/searchRecipes', methods=['GET', 'POST'])
 def search_recipes():
@@ -342,11 +354,17 @@ def search_recipes():
     else:
         # Pagination
         # Request the limit from link
-        p_limit = int(request.args['limit'])
+        try:
+            p_limit = int(request.args['limit'])
+        except:
+            p_limit = 8
         # Request the offset from link
         # make sure is 0 or more to avoid erver error
-        p_offset = int(request.args['offset'])
-        if p_offset < 0:
+        try:
+            p_offset = int(request.args['offset'])
+            if p_offset < 0:
+                p_offset = 0
+        except:
             p_offset = 0
         # make sure  is not bigger or equal than recipes count
         count = len(searchedRecipes)
@@ -366,6 +384,8 @@ def search_recipes():
                                     p_offset=p_offset,
                                     recipes=recipes,
                                     title="Searched Recipes")
+
+############################### ADD RECIPE ###############################
 
 @app.route('/addRecipe')
 def add_recipe():
@@ -413,6 +433,7 @@ def insert_recipe():
 
     return redirect(url_for('index'))
 
+############################### EDIT RECIPE ###############################
 
 @app.route('/editRecipe/<recipe_id>')
 def edit_recipe(recipe_id):
@@ -456,6 +477,7 @@ def edit_recipe(recipe_id):
         flash("Please log in first!")
         return redirect(url_for('index'))
 
+############################### UPDATE RECIPE ###############################
 
 @app.route('/updateRecipe/<recipe_id>', methods=['POST'])
 def update_recipe(recipe_id):
@@ -480,6 +502,7 @@ def update_recipe(recipe_id):
     })
     return redirect(url_for('view_recipe', recipe_id=recipe_id))
 
+############################### DELETE RECIPE ###############################
 
 @app.route('/deleteRecipe/<recipe_id>', methods=['GET', 'POST'])
 def delete_recipe(recipe_id):
@@ -498,6 +521,7 @@ def delete_recipe(recipe_id):
 #                             USER AUTH
 ######################################################################
 
+############################### LOGIN ###############################
 
 @app.route('/login', methods=['GET'])
 def login():
@@ -512,6 +536,7 @@ def login():
         # Render the page for user to be able to log in
         return render_template("login.html", title="Login")
 
+############################### USER AUTH ###############################
 
 @app.route('/user_auth', methods=['POST'])
 def user_auth():
@@ -537,8 +562,7 @@ def user_auth():
         flash("You must be registered!")
         return redirect(url_for('register'))
 
-# Register
-
+############################### REGISTER ###############################
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -585,8 +609,7 @@ def register():
 
     return render_template('register.html', title="Register")
 
-# Log out
-
+############################### LOG OUT ###############################
 
 @app.route('/logout')
 def logout():
@@ -595,8 +618,7 @@ def logout():
     flash("You were logged out!")
     return redirect(url_for('index'))
 
-# Profile page
-
+############################### PROFILE PAGE ###############################
 
 @app.route('/profile/<user>')
 def profile(user):
@@ -646,9 +668,7 @@ def profile(user):
         flash("You must be logged in or You access wrong link...")
         return redirect(url_for('index'))
 
-
-# Admin
-
+############################### ADMIN AREA ###############################
 
 @app.route('/admin')
 def admin():
@@ -662,6 +682,22 @@ def admin():
         flash('You must be logged in!')
         return redirect(url_for('index'))
 
+############################### ERROR 404 ###############################
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
+############################### ERROR 500 ###############################
+
+@app.errorhandler(500)
+def internal_server_error(e):
+    session.clear()
+    return render_template('500.html'), 500
+
+######################################################################
+#                             MAIN APP
+######################################################################
 
 if __name__ == '__main__':
     if os.environ.get("DEVELOPMENT"):

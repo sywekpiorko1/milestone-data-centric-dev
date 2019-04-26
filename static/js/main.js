@@ -1,5 +1,12 @@
 
 $(document).ready(function () {
+    $('.sidenav').sidenav();
+    $('select').formSelect();
+    $('.modal').modal();
+    $('.tabs').tabs();
+    $('.materialboxed').materialbox();
+    $('.collapsible').collapsible();
+        
     flashed_messages();
 });
 
@@ -13,17 +20,3 @@ function flashed_messages() {
         }, 4000);
     }
 }
-
-// disable enter key within textarea
-$('textarea').keypress(function(event) {
-    if ((event.keyCode || event.which) == 13) {
-        event.preventDefault();;
-        return false;
-      }
-    });
-$('textarea').keyup(function() {
-    var keyed = $(this).val().replace(/\n/g, '<br/>');
-
-    $(this).html(keyed);
-
-}); 
