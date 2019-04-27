@@ -1,7 +1,8 @@
 {% extends 'base.html' %} {% block main_content %}
 
+<!-- action button for filter/search reveal/hide -->
 <div class="fixed-action-btn">
-  <a id="show" class="btn-floating btn">
+  <a id="show" class="btn-floating btn waves-effect waves-light">
     <i class="large material-icons">search</i>
   </a>
 </div>
@@ -50,7 +51,7 @@
 
     <!-- FILTER and SEARCH -->
 
-    <div class="filterSearch col s12 m12 l3 z-depth-3 white-background">
+    <div class="filterSearch col s10 offset-s1 m6 offset-m3 l3 z-depth-3 white-background">
 
       {% include "_filter.html"  %}
 
@@ -58,8 +59,8 @@
 
       <div class="center">
         <div class="row">
-          <button class="btn btn waves-seffect waves-light purple accent-2 z-depth-3 myClicableBox" type="button"><a
-              href="{{ url_for('get_recipes', limit=8, offset=0) }} " class="white-text">ALL RECIPES</a>
+          <button class="btn btn waves-effect waves-light purple accent-2 z-depth-3 myClicableBox" type="button"><a
+              href="{{ url_for('get_recipes', limit=8, offset=0) }} " class="white-text">RESET</a>
             <i class="material-icons right">cached</i>
           </button>
         </div>

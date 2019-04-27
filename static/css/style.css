@@ -64,7 +64,7 @@ main {
 }
 
 .white-background {
-  background: white;
+  background: #fff;
   border-radius: 20px;
 }
 
@@ -196,6 +196,9 @@ footer p {
   }
   #show {
     display: inline-block;
+  }
+  .container-mainpage {
+    width: 100%;
   }
 }
 

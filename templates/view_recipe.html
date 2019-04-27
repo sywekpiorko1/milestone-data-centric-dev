@@ -1,63 +1,68 @@
 {% extends 'base.html' %} {% block main_content %}
 
 <section class="container-width750 section">
+
+  <!-- info on top RHS for viewer  -->
   <div class="row">
     {% if viewer != 'anonim' and viewer !=recipe.author %}
 
-      {% if voted_up_by_viewer %}
-      <p class="margin0 right-align teal-text">You upvoted this recipe !!!</p>
-      {% else %}
-      <p class="margin0 right-align teal-text"><small>You can upvote this recipe</small></p>
-      <p class="margin0 right-align teal-text"><small>by pressing THUMB UP at bottom of page !</small></p>
-      {% endif %}
+    {% if voted_up_by_viewer %}
+    <p class="margin0 right-align teal-text">You upvoted this recipe !!!</p>
+    {% else %}
+    <p class="margin0 right-align teal-text"><small>You can upvote this recipe</small></p>
+    <p class="margin0 right-align teal-text"><small>by pressing THUMB UP at bottom of page !</small></p>
+    {% endif %}
 
     {% elif viewer == 'anonim'  %}
-    <p class="margin0 right-align teal-text">Plese <a href="{{ url_for('login') }}">LOGIN</a>  or  <a href="{{ url_for('register') }}">REGISTER</a>  to upvote...</p>
+    <p class="margin0 right-align teal-text">Plese <a href="{{ url_for('login') }}">LOGIN</a> or <a
+        href="{{ url_for('register') }}">REGISTER</a> to upvote...</p>
     {% else %}
     <p class="margin0 right-align teal-text">You can't upvote this recipe as author...</p>
     {% endif %}
   </div>
 
   <!-- recipe top info -->
-  <div class="row">
-    <div class="col s12 l6">
-      <h4 class="indigo-text text-darken-4 center-align">{{ recipe.meal }}</h4>
-      <h6 class="indigo-text textdarken-3 center-align"><small>by</small>&nbsp;<i>{{ recipe.author }}</i></h6>
-    </div>
-    <br>
-    <div class="col l6 s12">
-
-      <div class="col s6 center-align">
-        <h6 class="indigo-text text-darken-2 center-align">
-          <small>Cuisine:</small>&nbsp;<span>{{ recipe.cuisine }}</span></h6>
-        <h6 class="indigo-text text-darken-2 center-align">
-          <small>Upvotes:</small>&nbsp;<span>{{ recipe.upvotes }}</span></h6>
-
+  <div class="z-depth-1" style="border: #cccccc solid 1px;">
+    <div class="row">
+      <div class="col s12 l6">
+        <h4 class="indigo-text text-darken-4 center-align">{{ recipe.meal }}</h4>
+        <h6 class="indigo-text textdarken-3 center-align"><small>by</small>&nbsp;<i>{{ recipe.author }}</i></h6>
       </div>
-      <div class="col s6 center-align">
-        <h6 class="indigo-text text-darken-1 center-align">
-          <small>Category:</small>&nbsp;<span>{{ recipe.category }}</span></h6>
-        <h6 class="indigo-text text-darken-1 center-align"><small>Views:</small>&nbsp;<span>{{ recipe.views }}</span>
-        </h6>
+      <br>
+      <div class="col l6 s12">
 
+        <div class="col s6 center-align">
+          <h6 class="indigo-text text-darken-2 center-align">
+            <small>Cuisine:</small>&nbsp;<span>{{ recipe.cuisine }}</span></h6>
+          <h6 class="indigo-text text-darken-2 center-align">
+            <small>Upvotes:</small>&nbsp;<span>{{ recipe.upvotes }}</span></h6>
+
+        </div>
+        <div class="col s6 center-align">
+          <h6 class="indigo-text text-darken-1 center-align">
+            <small>Category:</small>&nbsp;<span>{{ recipe.category }}</span></h6>
+          <h6 class="indigo-text text-darken-1 center-align"><small>Views:</small>&nbsp;<span>{{ recipe.views }}</span>
+          </h6>
+
+        </div>
       </div>
     </div>
-  </div>
-  
-  <!-- allergens chips -->
-  {% if recipe.allergens %}
-  <div class="row center-align">
-    <h6 class="red-text">ALLERGENS:</h6>
-    {% for allergen in recipe.allergens %}
-    <div class="chip orange">
-      {{ allergen }}
+
+    <!-- allergens chips -->
+    {% if recipe.allergens %}
+    <div class="row center-align">
+      <h6 class="red-text">ALLERGENS:</h6>
+      {% for allergen in recipe.allergens %}
+      <div class="chip orange">
+        {{ allergen }}
+      </div>
+      {% endfor %}
     </div>
-    {% endfor %}
+    {% endif %}
   </div>
-  {% endif %}
 
   <!-- TABS -->
-  <div class="row">
+  <div class="row margin-up">
     <div class="col s12">
       <ul class="tabs">
         <li class="tab col s6">
@@ -77,7 +82,8 @@
           {% endfor %}
         </div>
         <div class="margin-up col s6 offset-s3 l4 offset-l2">
-          <img src="{{ recipe.photo }}" alt="{{ recipe.meal }}" class="responsive-img materialboxed z-depth-3" data-caption="{{ recipe.meal }}">
+          <img src="{{ recipe.photo }}" alt="{{ recipe.meal }}" class="responsive-img materialboxed z-depth-3"
+            data-caption="{{ recipe.meal }}">
         </div>
       </div>
     </div>
@@ -95,11 +101,11 @@
           <!-- <p>recipe.youtube >> &nbsp;{{ recipe.youtube }}</p>
           <p>recipe_video >> &nbsp;{{ recipe_video }}</p> -->
           <div class="video-container">
-              <iframe src="{{ recipe_video }}" allowfullscreen="" width="853" frameborder="0"></iframe>
-            </div>
+            <iframe src="{{ recipe_video }}" allowfullscreen="" width="853" frameborder="0"></iframe>
+          </div>
         </div>
         {% endif %}
-      </div> 
+      </div>
     </div>
   </div>
 

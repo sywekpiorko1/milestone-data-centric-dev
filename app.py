@@ -682,6 +682,13 @@ def admin():
         flash('You must be logged in!')
         return redirect(url_for('index'))
 
+############################### ERROR 400 ###############################
+
+@app.errorhandler(400)
+def bad_request(e):
+    return render_template('400.html'), 400
+
+
 ############################### ERROR 404 ###############################
 
 @app.errorhandler(404)
