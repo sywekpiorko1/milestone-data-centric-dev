@@ -9,10 +9,12 @@ body {
 /* keep login and register in center */
 
 main {
-  /* background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://unsplash.it/1200/800/?random'); */
-  /* background-fill-mode: rgba(0,0,0,0.5); */
+  background: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.3)), url('/static/images/1.jpg');
+  
+  /* background-image: url('/static/images/1.jpg'); */
+  /* background-blend-mode: rgba(0,0,0,0.5); */
   /* height: 100vh; */
-  background: #ddd;
+  /* background: #ddd; */
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
@@ -22,18 +24,35 @@ main {
   flex: 1 0 auto;
 }
 
+.slider {
+  height: calc(100vh - 64px) !important;
+}
+
+.slides {
+  height: calc(100vh - 64px) !important;
+}
+
 /* NAVBAR */
 
 .nav-wrapper>ul>li:hover {
   background-color: orange;
 }
 
+nav ul li.active {
+  background-color: #555555;
+}
+
+.margin-small-up {
+  margin-top: -0.2rem;
+}
+
+
 .margin-up {
   margin-top: 1rem;
 }
 
-.padded-from-left {
-  padding-left: 2rem
+.margin-from-left {
+  margin-left: 6rem;
 }
 
 /* Login,Register form, Recipes, Recipe Details */
@@ -66,6 +85,16 @@ main {
 .white-background {
   background: #fff;
   border-radius: 20px;
+}
+
+.gray-background {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+  width: 40% !important; 
+}
+
+.chip-height-37 {
+  height: 37px; 
 }
 
 /* .container-width550 {
@@ -128,7 +157,11 @@ main {
 /* Search Template */
 
 br.line-height-2, li.line-height-2 {
-  line-height: 2.1;
+  line-height: 0.8;
+}
+
+.line-height-0 {
+  line-height: 0;
 }
 
 /* Cards */

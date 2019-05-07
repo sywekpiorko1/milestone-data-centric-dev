@@ -734,19 +734,19 @@ def internal_server_error(e):
 def chart():
 
     # Request the chart key from link
-    count_key  = str(request.args['count_key'])
+    count_key = str(request.args['count_key'])
 
     distinctKey = (recipes_collection.distinct(str(count_key)))
     distinctKey.sort()
     print(len(distinctKey))
     chart = pygal.Bar(print_values=True,
-                        print_values_position='top',
-                        legend_at_bottom=True,
-                        style=LightSolarizedStyle(value_font_family='googlefont:Raleway',
-                                        value_font_size=20,
-                                        value_colors=()))
+                      print_values_position='top',
+                      legend_at_bottom=True,
+                      style=LightSolarizedStyle(value_font_family='googlefont:Raleway',
+                                                value_font_size=20,
+                                                value_colors=()))
     chart.title = f"Recipes count by {count_key}"
-    
+
     for item in distinctKey:
         count = recipes_collection.find({count_key: item}).count()
         chart.add(item, count)
@@ -759,9 +759,8 @@ def chart():
 def chart_complex():
 
     # Request the x and y streams from link
-    factor_x  = str(request.args['factor_x'])
+    factor_x = str(request.args['factor_x'])
     factor_y = str(request.args['factor_y'])
-
 
     factor_x_list = (recipes_collection.distinct(factor_x))
     factor_x_list.sort()
@@ -769,13 +768,13 @@ def chart_complex():
     factor_y_list = (recipes_collection.distinct(factor_y))
     factor_y_list.sort()
 
-    line_chart = pygal.Line(x_label_rotation=45, 
-                            interpolate='hermite', 
+    line_chart = pygal.Line(x_label_rotation=45,
+                            interpolate='hermite',
                             legend_at_bottom=True,
                             style=LightSolarizedStyle(value_font_family='googlefont:Raleway',
-                                            value_font_size=20,
-                                            value_colors=('black',)))
-    line_chart.title = f"{factor_x} in {factor_y}"
+                                                      value_font_size=20,
+                                                      value_colors=('black',)))
+    line_chart.title = f"Recipes count by  {factor_x} in {factor_y}"
 
     print(factor_y_list)
     line_chart.x_labels = factor_y_list
@@ -797,6 +796,7 @@ def chart_complex():
 ######################################################################
 #                             MAIN APP
 ######################################################################
+
 
 if __name__ == '__main__':
     if os.environ.get("DEVELOPMENT"):

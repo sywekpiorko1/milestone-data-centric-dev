@@ -9,26 +9,26 @@
     <div class="col s10 offset-s1 m6 offset-m3 l3 center">
       <div class="col center-align">
         <h5>Charts of recipes count by:</h5>
-        <button class="margin-up btn waves-effect waves-light purple accent-3 z-depth-3">
+        <button class="margin-up btn waves-effect waves-light yellow accent-3 z-depth-3">
           <a href="{{ url_for('chart', count_key='author') }}" class="black-text">Author</a>
         </button>
-        <button class="margin-up btn waves-effect waves-light purple accent-2 z-depth-3">
+        <button class="margin-up btn waves-effect waves-light yellow accent-2 z-depth-3">
           <a href="{{ url_for('chart', count_key='category') }}" class="black-text">Category</a>
         </button>
-        <button class="margin-up btn waves-effect waves-light purple accent-1 z-depth-3">
+        <button class="margin-up btn waves-effect waves-light yellow accent-1 z-depth-3">
           <a href="{{ url_for('chart', count_key='cuisine') }}" class="black-text">Cuisine</a>
         </button>
       </div>
       <div class="col center-align">
-        <h5>Charts of cross-relation recipes count between:</h5>
-        <button class="margin-up btn waves-effect waves-light purple lighten-3 z-depth-3">
-          <a href="{{ url_for('chart_complex', factor_x='author', factor_y='category') }}" class="black-text">AUTHOR & CATEGORY</a>
+        <!-- <h5>Charts of cross-relation recipes count between:</h5> -->
+        <button class="margin-up btn waves-effect waves-light blue lighten-3 z-depth-3">
+          <a href="{{ url_for('chart_complex', factor_x='author', factor_y='category') }}" class="black-text">AUTHOR in CATEGORY</a>
         </button>
-        <button class="margin-up btn waves-effect waves-light purple lighten-2 z-depth-3">
-          <a href="{{ url_for('chart_complex', factor_x='author', factor_y='cuisine') }}" class="black-text">AUTHOR & CUISINE</a>
+        <button class="margin-up btn waves-effect waves-light blue lighten-2 z-depth-3">
+          <a href="{{ url_for('chart_complex', factor_x='author', factor_y='cuisine') }}" class="black-text">AUTHOR in CUISINE</a>
         </button>
-        <button class="margin-up btn waves-effect waves-light purple lighten-1 z-depth-3">
-          <a href="{{ url_for('chart_complex', factor_x='author', factor_y='cuisine') }}" class="black-text">CATEGORY & CUISINE</a>
+        <button class="margin-up btn waves-effect waves-light blue lighten-1 z-depth-3">
+          <a href="{{ url_for('chart_complex', factor_x='category', factor_y='cuisine') }}" class="black-text">CATEGORY in CUISINE</a>
         </button>
 
       </div>
@@ -38,7 +38,7 @@
 
     <!-- chart tab  -->
     <div class="col s12 m12 l9">
-      {% include 'graphTemplate.html' %}
+      {% include '_graph.html' %}
 
     </div>
   </div>

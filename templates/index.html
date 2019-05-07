@@ -1,34 +1,29 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% block main_content %}
 
-{% block main_content %}
-
-<div class="container-width350 center">
-  
-  <h4>Welcome {{ viewer }}</h4>
-  <br>
-  <P>to online cooking recipes database which consists recipes from various categories and cuisines around the world.</P>
-  <br>
-  <p>Feel free using ours CooKBooK, You can explore <div class="chip"><a class="linked" href="{{ url_for('get_recipes', limit=8, offset=0) }}">ALL RECIPES</a></div></p>
-  <br>
-
-  {% if viewer == 'anonim' %}
-  
-  <p>If You want add Your own recipe or Upvote existing You will have to <div class="chip"><a href="{{ url_for('login') }}">LOGIN</a></div> or&nbsp; <div class="chip"><a href="{{ url_for('register') }}">REGISTER</a></div></p>
-  
-  {% else %}
-  
-  <p>To see recipes created or upvoted by You please visit Your <div class="chip"><a href="{{ url_for('profile', user=viewer) }}">PROFILE PAGE</a></div></p>
-  <p>If You have some fresh ideas please <div class="chip"><a href="{{ url_for('add_recipe') }}">ADD RECIPE</a></div></p>
-
-  {% if viewer == 'admin' %}
-  <p>MAIN ADMIN POWER is that You can always edit or delete ANY recipe in single recipe view.</p>
-  {% else %}
-  <p>Of Course You can always edit or delete Your own recipes in single recipe view.</p> 
-  {% endif %}
-
-  {% endif %}
-
+<div class="slider">
+  <ul class="slides">
+    <li>
+      <img src="static/images/2.jpg" />
+      <div class="caption center-align gray-background">
+        <h3 class="black-text">This is our big Tagline!</h3>
+        <h5 class="light black-text text-lighten-3">Here's our small slogan.</h5>
+      </div>
+    </li>
+    <li>
+      <img src="static/images/3.jpg" />
+      <div class="caption left-align gray-background">
+        <h3>Left Aligned Caption</h3>
+        <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
+      </div>
+    </li>
+    <li>
+      <img src="static/images/4.jpg" />
+      <div class="caption right-align gray-background">
+        <h3>Right Aligned Caption</h3>
+        <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
+      </div>
+    </li>
+  </ul>
 </div>
-
 
 {% endblock main_content %}
