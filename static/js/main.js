@@ -10,7 +10,7 @@ $(document).ready(function() {
       indicators: false,
       full_width: true,
       // height: 924,
-      interval: 3000,
+      interval: 8000,
       duration: 1000
   });
 

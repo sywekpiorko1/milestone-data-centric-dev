@@ -88,9 +88,9 @@ nav ul li.active {
 }
 
 .gray-background {
-  background: rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.5);
   border-radius: 20px;
-  width: 40% !important; 
+  width: 60% !important; 
 }
 
 .chip-height-37 {
