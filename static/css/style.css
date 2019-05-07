@@ -166,10 +166,10 @@ br.line-height-2, li.line-height-2 {
 
 /* Cards */
 
-#padded {
-  padding-left: 10px;
-  padding-top: 10px;
-  padding-right: 10px;
+.padded {
+  padding-left: 10px !important;
+  padding-top: 10px !important;
+  padding-right: 10px !important;
 }
 
 #upvotes {
@@ -181,9 +181,9 @@ br.line-height-2, li.line-height-2 {
   line-height: 12px;
 }
 
-#padding-5px {
-  padding-left: 5px;
-  padding-right: 5px;
+.padding-5px {
+  padding-left: 5px !important; 
+  padding-right: 5px !important;
 }
 
 .cards .card .card-action {

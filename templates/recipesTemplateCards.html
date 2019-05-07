@@ -3,7 +3,7 @@
 
 
     <div class="card-image">
-      <img id="padded" src="{{recipe.photo}}" alt="{{recipe.meal}}" class="materialboxed" data-caption="{{ recipe.meal }}">
+      <img src="{{recipe.photo}}" alt="{{recipe.meal}}" class="padded materialboxed" data-caption="{{ recipe.meal }}">
       <a class="btn-floating {% if recipe.upvotes > 99 %} btn-large {% endif %}halfway-fab orange lighten-4">
         <p id="upvotes" class="center-align halfway indigo-text"><i id="upvotes_icon"
             class="material-icons red-text">favorite</i>{{recipe.upvotes}}</p>
@@ -11,7 +11,7 @@
     </div>
 
 
-    <div id="padding-5px" class="card-content">
+    <div class="padding-5px card-content">
       <h6 class="truncate card-title grey-text text-darken-4 center-align">
         {{recipe.meal}}
       </h6>
@@ -26,6 +26,6 @@
       </div>
     </div>
 
-    
+
   </div>
 </div>
