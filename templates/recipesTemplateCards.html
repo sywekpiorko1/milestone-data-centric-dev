@@ -1,10 +1,10 @@
 <div class="col s6 m6 l3">
-  <div class="card z-depth-3">
+  <div class="check-size card z-depth-3">
 
 
     <div class="card-image">
       <img src="{{recipe.photo}}" alt="{{recipe.meal}}" class="padded materialboxed" data-caption="{{ recipe.meal }}">
-      <a class="btn-floating {% if recipe.upvotes > 99 %} btn-large {% endif %}halfway-fab orange lighten-4">
+      <a class="btn-floating {% if recipe.upvotes > 99 %} btn-large {% endif %} halfway-fab red lighten-5 lighten-4">
         <p id="upvotes" class="center-align halfway indigo-text"><i id="upvotes_icon"
             class="material-icons red-text">favorite</i>{{recipe.upvotes}}</p>
       </a>

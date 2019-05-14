@@ -27,26 +27,22 @@
     <br>
     <!--                              CATEGORY FROM LIST -->
     <div class="input-field col xl6 l12 m6 s6">
-      <!-- <i class="material-icons prefix">category</i> -->
       <select id="category" name="category">
         <option value="" disabled selected>by Categories</option>
         {% for category in categories %}
         <option value="{{category.category_name}}">{{category.category_name}}</option>
         {% endfor %}
       </select>
-      <!-- <label>Filter by Categories</label> -->
     </div>
 
     <!--                                CUISINE FROM LIST -->
     <div class="input-field col xl6 l12 m6 s6">
-      <!-- <i class="material-icons prefix">flag</i> -->
       <select id="cuisine" name="cuisine">
         <option value="" disabled selected>by Cuisines</option>
         {% for cuisine in cuisines %}
         <option value="{{cuisine.cuisine_name}}">{{cuisine.cuisine_name}}</option>
         {% endfor %}
       </select>
-      <!-- <label>Filter by Cuisines</label> -->
     </div>
     <div class="filter row center-align">
       <button id="filter-button" class="btn waves-effect waves-light blue darken-4 z-depth-3" type="submit" name="action" disabled>Filter
@@ -56,6 +52,5 @@
 
 
   </div>
-  <!-- <br class="line-height-2"> -->
 
 </form>

@@ -18,12 +18,12 @@ $(document).ready(function() {
 });
 
 function flashed_messages() {
-  let messages = parseInt($("#messages h4").length);
+  let messages = parseInt($("#messages").length);
   if (messages) {
     console.log("Im in function flashed_messages()");
     $("#alerts").slideDown(1500);
     setTimeout(() => {
       $("#alerts").slideUp(1500);
-    }, 4000);
+    }, 3000);
   }
 }

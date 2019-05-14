@@ -245,7 +245,7 @@ def filter_recipes():
                 filters.append(search_filter)
 
         print(
-            f"Filter (category or cuisine) :{filters}) | Filters (do not display allergens) :{exclusion}")
+            f"Filter (category or cuisine) :{filters}) | Filters (exclude allergens) :{exclusion}")
 
         # check if selectoin made - if not - display warning
         if filters or exclusion:
@@ -288,7 +288,32 @@ def filter_recipes():
             flash("Choose something before hit FILTER")
             return redirect(request.referrer)
     else:
-        return redirect(url_for('index'))
+        # Pagination
+        # Request the limit from link
+        p_limit = int(request.args['limit'])
+        # Request the offset from link
+        # make sure is 0 or more to avoid erver error
+        p_offset = int(request.args['offset'])
+        if p_offset < 0:
+            p_offset = 0
+        # make sure  is not bigger or equal than recipes count
+        count = len(filtered_and_excluded_allergens)
+        if p_offset > count:
+            p_offset = count
+
+        recipes = (filtered_and_excluded_allergens)[p_offset:p_limit+p_offset]
+
+        return render_template("recipes.html",
+                            allergens=allergens_collection.find(),
+                            categories=category_list_sorted,
+                            count=count,
+                            cuisines=cuisine_list_sorted,
+                            next_url=f"/filterRecipes?limit={str(p_limit)}&offset={str(p_offset + p_limit)}",
+                            prev_url=f"/filterRecipes?limit={str(p_limit)}&offset={str(p_offset - p_limit)}",
+                            p_limit=p_limit,
+                            p_offset=p_offset,
+                            recipes=recipes,
+                            title="Filtered Recipes")
 
 ############################### SEARCH RECIPES ###############################
 
@@ -333,7 +358,32 @@ def search_recipes():
             flash("Type in something before hit SEARCH")
             return redirect(request.referrer)
     else:
-        return redirect(url_for('index'))
+        # Pagination
+        # Request the limit from link
+        p_limit = int(request.args['limit'])
+        # Request the offset from link
+        # make sure is 0 or more to avoid erver error
+        p_offset = int(request.args['offset'])
+        if p_offset < 0:
+            p_offset = 0
+        # make sure  is not bigger or equal than recipes count
+        count = len(searchedRecipes)
+        if p_offset > count:
+            p_offset = count
+
+        recipes = (searchedRecipes)[p_offset:p_limit+p_offset]
+
+        return render_template("recipes.html",
+                                    allergens=allergens_collection.find(),
+                                    categories=category_list_sorted,
+                                    count=count,
+                                    cuisines=cuisine_list_sorted,
+                                    next_url=f"/searchRecipes?limit={str(p_limit)}&offset={str(p_offset + p_limit)}",
+                                    prev_url=f"/searchRecipes?limit={str(p_limit)}&offset={str(p_offset - p_limit)}",
+                                    p_limit=p_limit,
+                                    p_offset=p_offset,
+                                    recipes=recipes,
+                                    title="Searched Recipes")
 
 ############################### ADD RECIPE ###############################
 
