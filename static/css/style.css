@@ -1,33 +1,51 @@
+
+
+/* whole file parsed by https://autoprefixer.github.io/ */
+
+
 /* https://stackoverflow.com/questions/33862855/materialize-footer-not-going-to-bottom-of-page */
 
 body {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   min-height: 100vh;
-  flex-direction: column;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
 }
 
-/* keep login and register in center */
-
 main {
+  background: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0.1)), to(rgba(0, 0, 0, 0.3))), url('/static/images/1.jpg');
+  background: -webkit-linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.3)), url('/static/images/1.jpg');
+  background: -o-linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.3)), url('/static/images/1.jpg');
   background: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.3)), url('/static/images/1.jpg');
-  /* background-image: url('/static/images/1.jpg'); */
-  /* background-blend-mode: rgba(0,0,0,0.5); */
-  /* height: 100vh; */
-  /* background: #ddd; */
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  flex: 1 0 auto;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-flex: 1;
+      -ms-flex: 1 0 auto;
+          flex: 1 0 auto;
 }
 
 footer {
-  flex-shrink: 0;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
 }
 
+
 /* SLIDER */
+
 
 .slider {
   height: calc(100vh - 64px) !important;
@@ -37,7 +55,9 @@ footer {
   height: calc(100vh - 64px) !important;
 }
 
+
 /* NAVBAR */
+
 
 .nav-wrapper>ul>li:hover {
   background-color: orange;
@@ -55,11 +75,25 @@ nav ul li.active {
   margin-top: 1rem;
 }
 
+.margin-up-5 {
+  margin-top: 5rem;
+}
+
 .margin-from-left {
   margin-left: 6rem;
 }
 
+.margin-from-left-2 {
+  margin-left: 2rem;
+}
+
+.margin-from-left-1 {
+  margin-left: 1rem;
+}
+
+
 /* Login,Register form, Recipes, Recipe Details */
+
 
 .container-mainpage {
   width: 90%;
@@ -72,7 +106,8 @@ nav ul li.active {
   border: 2px solid rgba(175, 144, 233, 0.952);
   width: 350px;
   height: auto;
-  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
   position: relative;
 }
 
@@ -82,7 +117,8 @@ nav ul li.active {
   border: 2px solid rgba(175, 144, 233, 0.952);
   width: 750px;
   height: auto;
-  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
   position: relative;
 }
 
@@ -101,16 +137,28 @@ nav ul li.active {
   height: 37px;
 }
 
+.line-height-40 {
+  line-height: 40%;
+}
+
+.line-height-70 {
+  line-height: 70%;
+}
+
 /* Add_recipe */
+/* Profile */
 
 .container-wide {
   background: white;
   border: 2px solid rgba(175, 144, 233, 0.952);
   padding: 20px 25px;
+  margin-top: 20px;
   margin-bottom: 20px;
 }
 
+
 /* Checkboxes */
+/* View recipe */
 
 /* https://www.jquery-az.com/5-styles-materialize-checkbox-custom-checkedunchecked/ */
 
@@ -123,7 +171,18 @@ nav ul li.active {
   z-index: 0;
 }
 
+.border-white-1 {
+  border:#cccccc solid 1px;
+}
+
+.video-player {
+  width:853px;
+  border:none;
+}
+
+
 /* Flashed messages */
+
 
 #alerts {
   top: 95%;
@@ -133,11 +192,10 @@ nav ul li.active {
   color: yellow;
 }
 
+
 /* Pagination  */
-
-/* and */
-
 /* Search Template */
+
 
 br.line-height-2, li.line-height-2 {
   line-height: 0.8;
@@ -147,7 +205,9 @@ br.line-height-2, li.line-height-2 {
   line-height: 0;
 }
 
+
 /* Cards */
+
 
 .padded {
   padding-left: 10px !important;
@@ -190,7 +250,9 @@ br.line-height-2, li.line-height-2 {
   border-bottom-right-radius: 20px;
 }
 
+
 /* Section */
+
 
 .margin0 {
   margin: 0;
@@ -204,17 +266,25 @@ br.line-height-2, li.line-height-2 {
   background: transparent;
 }
 
+
 /* Graphs */
+
 
 .padding-bottom {
   padding-bottom: 20px !important;
 }
 
+
 /* Footer */
+
 
 footer p {
   color: white;
 }
+
+
+/* Media queries */
+
 
 @media (max-width: 992px) {
   .filterSearch {

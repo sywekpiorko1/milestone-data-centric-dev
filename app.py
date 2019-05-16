@@ -79,15 +79,13 @@ def get_recipes():
         print("USER: ", user_in_db['username'])
         if user_in_db:
             viewer = user_in_db['username']
-    # flash(viewer)
 
     # Pagination
-
         # Request the limit from link
     p_limit = int(request.args['limit'])
 
     # Request the offset from link
-    # make sure is 0 or more to avoid erver error
+    # make sure is 0 or more to avoid server error
     p_offset = int(request.args['offset'])
     if p_offset < 0:
         p_offset = 0
@@ -154,7 +152,6 @@ def view_recipe(recipe_id):
 
     recipe_video = substring_after(
         recipe['youtube'], keySentence1, keySentence2, 11)
-    #    recipe['youtube'].replace("watch?v=","embed/")
 
     return render_template("view_recipe.html",
                            recipe=recipe,
@@ -207,8 +204,6 @@ def remove_vote_up(recipe_id, viewer):
     recipes_collection.update({'_id': ObjectId(recipe_id)}, {
                               "$set": {'upvotes': recipe_upvotes, 'upvotes_who': upvotes_who}})
 
-# TO DO remake form username to user_id
-    # update viewers document upvoted_recipes
     users_collection.update({'username': viewer}, {
                             "$pull": {'upvoted_recipes': recipe_id}})
 
@@ -304,16 +299,16 @@ def filter_recipes():
         recipes = (filtered_and_excluded_allergens)[p_offset:p_limit+p_offset]
 
         return render_template("recipes.html",
-                            allergens=allergens_collection.find(),
-                            categories=category_list_sorted,
-                            count=count,
-                            cuisines=cuisine_list_sorted,
-                            next_url=f"/filterRecipes?limit={str(p_limit)}&offset={str(p_offset + p_limit)}",
-                            prev_url=f"/filterRecipes?limit={str(p_limit)}&offset={str(p_offset - p_limit)}",
-                            p_limit=p_limit,
-                            p_offset=p_offset,
-                            recipes=recipes,
-                            title="Filtered Recipes")
+                               allergens=allergens_collection.find(),
+                               categories=category_list_sorted,
+                               count=count,
+                               cuisines=cuisine_list_sorted,
+                               next_url=f"/filterRecipes?limit={str(p_limit)}&offset={str(p_offset + p_limit)}",
+                               prev_url=f"/filterRecipes?limit={str(p_limit)}&offset={str(p_offset - p_limit)}",
+                               p_limit=p_limit,
+                               p_offset=p_offset,
+                               recipes=recipes,
+                               title="Filtered Recipes")
 
 ############################### SEARCH RECIPES ###############################
 
@@ -374,16 +369,16 @@ def search_recipes():
         recipes = (searchedRecipes)[p_offset:p_limit+p_offset]
 
         return render_template("recipes.html",
-                                    allergens=allergens_collection.find(),
-                                    categories=category_list_sorted,
-                                    count=count,
-                                    cuisines=cuisine_list_sorted,
-                                    next_url=f"/searchRecipes?limit={str(p_limit)}&offset={str(p_offset + p_limit)}",
-                                    prev_url=f"/searchRecipes?limit={str(p_limit)}&offset={str(p_offset - p_limit)}",
-                                    p_limit=p_limit,
-                                    p_offset=p_offset,
-                                    recipes=recipes,
-                                    title="Searched Recipes")
+                               allergens=allergens_collection.find(),
+                               categories=category_list_sorted,
+                               count=count,
+                               cuisines=cuisine_list_sorted,
+                               next_url=f"/searchRecipes?limit={str(p_limit)}&offset={str(p_offset + p_limit)}",
+                               prev_url=f"/searchRecipes?limit={str(p_limit)}&offset={str(p_offset - p_limit)}",
+                               p_limit=p_limit,
+                               p_offset=p_offset,
+                               recipes=recipes,
+                               title="Searched Recipes")
 
 ############################### ADD RECIPE ###############################
 
@@ -554,18 +549,14 @@ def user_auth():
         if check_password_hash(user_in_db['password'], form['user_password']):
             # Log user in (add to session)
             session['user'] = form['username']
-            # If the user is admin redirect him to admin area
-            if session['user'] == "admin":
-                return redirect(url_for('admin'))
-            else:
-                flash("You were logged in!")
-                return redirect(url_for('profile', user=user_in_db['username']))
+            flash("You were logged in")
+            return redirect(url_for('profile', user=user_in_db['username']))
         else:
             flash("Wrong password or user name")
             return redirect(url_for('login'))
     else:
-        flash("You must be registered!")
-        return redirect(url_for('register'))
+        flash("Wrong password or user name")
+        return redirect(url_for('login'))
 
 ############################### REGISTER ###############################
 
@@ -640,7 +631,7 @@ def profile(user):
         # prepare list of recipes created by user
         profile_user_recipes = recipes_collection.find(
             {'author': user_in_db['username']}).sort('meal')
-        # if == 0 change to None to avoid displaying Header in profile template
+        # if == 0 change to None to avoid displaying Header in profile template as jinja is looking for it
         if profile_user_recipes.count() == 0:
             profile_user_recipes = None
         # to avoid error escape if user has no list of ids of upvoted recipes in his document
@@ -676,34 +667,20 @@ def profile(user):
         flash("You must be logged in or You access wrong link...")
         return redirect(url_for('index'))
 
-############################### ADMIN AREA ###############################
-
-
-@app.route('/admin')
-def admin():
-    if 'user' in session:
-        if session['user'] == 'admin':
-            return render_template('admin.html')
-        else:
-            flash('Only Admins can access this page!')
-            return redirect(url_for('index'))
-    else:
-        flash('You must be logged in!')
-        return redirect(url_for('index'))
 
 ############################### ERROR 400 ###############################
 
 
 @app.errorhandler(400)
 def bad_request(e):
-    return render_template('400.html'), 400
+    return render_template('400.html', title="400"), 400
 
 
 ############################### ERROR 404 ###############################
 
 @app.errorhandler(404)
 def page_not_found(e):
-    return render_template('404.html'), 404
+    return render_template('404.html', title="404"), 404
 
 ############################### ERROR 500 ###############################
 
@@ -711,7 +688,7 @@ def page_not_found(e):
 @app.errorhandler(500)
 def internal_server_error(e):
     session.clear()
-    return render_template('500.html'), 500
+    return render_template('500.html', title="500"), 500
 
 ######################################################################
 #                             GRAPHS

@@ -22,7 +22,7 @@
   </div>
 
   <!-- recipe top info -->
-  <div class="z-depth-1" style="border: #cccccc solid 1px;">
+  <div class="border-white-1 z-depth-1">
     <div class="row">
       <div class="col s12 l6">
         <h4 class="indigo-text text-darken-4 center-align">{{ recipe.meal }}</h4>
@@ -33,14 +33,14 @@
 
         <div class="col s6 center-align">
           <h6 class="indigo-text text-darken-2 center-align">
-            <small>Cuisine:</small>&nbsp;<span>{{ recipe.cuisine }}</span></h6>
+            <small>Cuisine:</small>&nbsp;<span class="truncate">{{ recipe.cuisine }}</span></h6>
           <h6 class="indigo-text text-darken-2 center-align">
             <small>Upvotes:</small>&nbsp;<span>{{ recipe.upvotes }}</span></h6>
 
         </div>
         <div class="col s6 center-align">
           <h6 class="indigo-text text-darken-1 center-align">
-            <small>Category:</small>&nbsp;<span>{{ recipe.category }}</span></h6>
+            <small>Category:</small>&nbsp;<span class="truncate">{{ recipe.category }}</span></h6>
           <h6 class="indigo-text text-darken-1 center-align"><small>Views:</small>&nbsp;<span>{{ recipe.views }}</span>
           </h6>
 
@@ -101,7 +101,7 @@
           <!-- <p>recipe.youtube >> &nbsp;{{ recipe.youtube }}</p>
           <p>recipe_video >> &nbsp;{{ recipe_video }}</p> -->
           <div class="video-container">
-            <iframe src="{{ recipe_video }}" allowfullscreen="" width="853" frameborder="0"></iframe>
+            <iframe src="{{ recipe_video }}" class="video-player" allowfullscreen=""></iframe>
           </div>
         </div>
         {% endif %}
@@ -150,7 +150,7 @@
         </div>
         <div class="modal-footer">
           <a href="{{ url_for('delete_recipe', recipe_id=recipe._id) }}" class="btn red" title="REMOVE">YES - DELETE</a>
-          <a href="#" class="modal-close btn green" style="margin-left: 1rem">NO - go back</a>
+          <a href="#" class="margin-from-left-1 modal-close btn green">NO - go back</a>
         </div>
       </div>
       {% endif %}

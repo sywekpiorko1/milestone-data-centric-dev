@@ -11,18 +11,20 @@
     </div>
 
 
-    <div class="padding-5px card-content">
-      <h6 class="truncate card-title grey-text text-darken-4 center-align">
-        {{recipe.meal}}
-      </h6>
-      <h6 class="truncate center-align"><small>Cuisine: </small><em>{{recipe.cuisine}}</em></h6>
-      <h6 class="truncate center-align"><small>Category: </small><em>{{recipe.category}}</em></h6>
-    </div>
+    <!-- <div class="valign-wrapper"> -->
+      <div class="padding-5px card-content">
+        <h6 class="truncate card-title grey-text text-darken-4 center-align">
+          {{recipe.meal}}
+        </h6>
+        <h6 class="truncate center-align"><small>Cuisine: </small><em>{{recipe.cuisine}}</em></h6>
+        <h6 class="truncate center-align"><small>Category: </small><em>{{recipe.category}}</em></h6>
+      </div>
+    <!-- </div> -->
 
 
-    <div class="card-action myClicableBox waves-effect waves-block waves-light grey lighten-4">
+    <div class="card-action myClicableBox waves-effect waves-block waves-light grey lighten-4 hoverable">
       <div class="center-align">
-        <a href="{{ url_for('view_recipe', recipe_id=recipe._id) }}">view details</a>
+        <a href="{{ url_for('view_recipe', recipe_id=recipe._id) }}" class="indigo-text">view details</a>
       </div>
     </div>
 

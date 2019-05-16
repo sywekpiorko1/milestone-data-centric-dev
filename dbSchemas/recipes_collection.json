@@ -1,0 +1,17 @@
+{
+    "_id": {
+		"$oid": ""          
+    },
+    "meal": "",
+    "category": "",
+    "author": "",
+    "upvotes": 1,
+    "views": 1,
+    "upvotes_who": [],
+    "cuisine": "",
+    "ingredients": [],
+    "instructions": "",
+    "allergens": [],
+    "youtube": "",
+    "photo": ""
+}

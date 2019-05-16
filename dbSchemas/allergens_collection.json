@@ -1,0 +1,26 @@
+[
+    {
+        "allergen_name": "eggs"
+    },
+    {
+        "allergen_name": "peanuts"
+    },
+    {
+        "allergen_name": "milk"
+    },
+    {
+        "allergen_name": "tree nuts"
+    },
+    {
+        "allergen_name": "fish"
+    },
+    {
+        "allergen_name": "shellfish"
+    },
+    {
+        "allergen_name": "soy"
+    },
+    {
+        "allergen_name": "wheat"
+    }
+]

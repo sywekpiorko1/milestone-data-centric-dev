@@ -1,0 +1,47 @@
+[
+    {
+        "username": "admin",
+        "email": "hidden",
+        "password": "hashed",
+        "upvoted_recipes": [
+            "5ca644ff81ba6125303aba9d",
+            "5c940d4f81ba613bc4c1451b",
+            "5cb0b53616323a000cc67a31",
+            "5caf0bac81ba611e1c7b549e",
+            "5caf0bb081ba611e1c7b5506"
+        ]
+    },
+    {
+        "username": "sylwek",
+        "email": "hidden",
+        "password": "hashed",
+        "upvoted_recipes": [
+            "5c922a501c9d440000078ae9",
+            "5c928c5b1c9d4400002ca83e",
+            "5c921c491c9d440000078ae7",
+            "5ca644ff81ba6125303aba9d",
+            "5ca64b4481ba6125303aba9f"
+        ]
+    },
+    {
+        "username": "majas76",
+        "email": "hidden",
+        "password": "hashed"
+    },
+    {
+        "username": "Teresa",
+        "email": "hidden",
+        "password": "hashed",
+        "upvoted_recipes": [
+            "5caf0bac81ba611e1c7b549a"
+        ]
+    },
+    {
+        "username": "piotraass",
+        "email": "hidden",
+        "password": "hashed",
+        "upvoted_recipes": [
+            "5c922a501c9d440000078ae9"
+        ]
+    }
+]

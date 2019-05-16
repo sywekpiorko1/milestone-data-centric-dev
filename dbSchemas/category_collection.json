@@ -1,0 +1,41 @@
+[
+    {
+        "category_name": "Seafood"
+    },
+    {
+        "category_name": "Chicken"
+    },
+    {
+        "category_name": "Desert"
+    },
+    {
+        "category_name": "Lamb"
+    },
+    {
+        "category_name": "Beef"
+    },
+    {
+        "category_name": "Vegetarian"
+    },
+    {
+        "category_name": "Vegan"
+    },
+    {
+        "category_name": "Starter"
+    },
+    {
+        "category_name": "Miscellaneous"
+    },
+    {
+        "category_name": "Pork"
+    },
+    {
+        "category_name": "Pasta"
+    },
+    {
+        "category_name": "Breakfast"
+    },
+    {
+        "category_name": "Side"
+    }
+]

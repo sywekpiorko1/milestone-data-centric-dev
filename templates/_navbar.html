@@ -9,13 +9,9 @@
       <li class="{% if 'recipes' in request.path %} active {% endif %}"><a href="{{ url_for('get_recipes', limit=8, offset=0) }}">ALL RECIPES</a></li>
       {% if session.user %}
       <li class="{% if 'addRecipe' in request.path %} active {% endif %}"><a href="{{ url_for('add_recipe') }}">ADD RECIPE</a></li>
-      <li class="{% if 'profile' in request.path %} active {% endif %} tooltipped" data-position="bottom" data-tooltip="Profile page"><a
+      <li class="{% if 'profile' in request.path %} active {% endif %} tooltipped" data-position="bottom" data-tooltip="{{ session.user }}'s profile page"><a
           href="{{url_for('profile', user=session.user)}}"><i class="material-icons">person</i></a></li>
       <li><a href="{{url_for('logout')}}">Logout</a></li>
-      {% if session.user == 'admin' %}
-      <li class="{% if 'admin' in request.path and 'profile' not in request.path %} active {% endif %}"><a
-          href="{{url_for('admin')}}">Admin</a></li>
-      {% endif %}
       {% else %}
       <li class="{% if 'register' in request.path %} active {% endif %}"><a href="{{url_for('register')}}">Register</a>
       </li>
@@ -28,8 +24,8 @@
 <!--  ########################  Navbar/mobile ###########################   -->
 <ul class="sidenav" id="mobile-demo">
   <li><a href="{{ url_for('index') }}" class="brand-logo left"><img alt="Page Logo Photo" src="/static/images/logo1.png" width="210"
-        height="auto" style="margin-left: 2rem"></a></li>
-  <li class="{% if 'chart' in request.path and 'profile' not in request.path %} active {% endif %}"><a href="{{ url_for('chart', count_key='author') }}" style="margin-top: 5rem"><i class="material-icons">show_chart</i>CHARTS</a></li>
+        height="auto" class="margin-from-left-2"></a></li>
+  <li class="margin-up-5 {% if 'chart' in request.path and 'profile' not in request.path %} active {% endif %}"><a href="{{ url_for('chart', count_key='author') }}"><i class="material-icons">show_chart</i>CHARTS</a></li>
   <li class="{% if 'recipes' in request.path and 'profile' not in request.path %} active {% endif %}"><a href="{{ url_for('get_recipes', limit=8, offset=0) }}"><i
         class="material-icons">receipt</i>ALL RECIPES</a></li>
   {% if session.user %}
@@ -38,10 +34,6 @@
       href="{{url_for('profile', user=session.user)}}"><i class="material-icons">person</i>Profile:
       {{ session.user }}</a></li>
   <li><a href="{{url_for('logout')}}">Logout</a></li>
-  {% if session.user == 'admin' %}
-  <li class="{% if 'admin' in request.path and 'profile' not in request.path %} active {% endif %}"><a
-      href="{{url_for('admin')}}">Admin</a></li>
-  {% endif %}
   {% else %}
   <li class="{% if 'register' in request.path %} active {% endif %}"><a href="{{url_for('register')}}"><i
         class="material-icons">person_add</i>Register</a>
