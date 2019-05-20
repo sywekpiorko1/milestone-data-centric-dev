@@ -736,6 +736,7 @@ def chart_complex():
     line_chart = pygal.Line(x_label_rotation=45,
                             interpolate='hermite',
                             legend_at_bottom=True,
+                            show_x_guides=True,
                             style=LightSolarizedStyle(value_font_family='googlefont:Raleway',
                                                       value_font_size=20,
                                                       value_colors=('black',)))

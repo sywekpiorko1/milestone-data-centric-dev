@@ -155,6 +155,9 @@ nav ul li.active {
   margin-top: 20px;
   margin-bottom: 20px;
 }
+::placeholder {
+	color: #2B2B2B;
+}
 
 
 /* Checkboxes */
