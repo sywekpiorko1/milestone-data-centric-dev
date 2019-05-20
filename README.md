@@ -59,7 +59,7 @@ In the initial version of the project I created a separate `FILTER` page without
 
 Then I placed the filtering panel above the recipes but after making such a pattern I noticed that it is too wide and I decided to move the panel to the left in the view on large screens.
 
-![](static\images\readme\recipes_large_screen.jpg)
+![](static/images/readme/recipes_large_screen.jpg)
 
 In the meantime, I enriched the `FILTER` panel with `SEARCH` functions.
 
@@ -75,7 +75,7 @@ In the mobile view, recipes are displayed in two columns without the `FILTER / S
 
 In the bottom right corner there is a pulsing icon which when pressed displays the `FILTER / SEARCH` panel above the recipes. Once the panel is visible, the icon will hide so as not to interfere with the `FILTER / SEARCH` panel, it will be displayed again only when the page is reloaded or flipped with chevrons.
 
-![](static\images\readme\recipes_mobile.jpg)
+![](static/images/readme/recipes_mobile.jpg)
 
 After pressing the `SHOW DETAILS` section on any of the recipes bottom part, You go to the single recipe view.
 By default, a tab with ingredients is displayed - to see the preparation instructions, switch tab from the `INGREDIENTS` to `INSTRUCTIONS`.
@@ -86,7 +86,7 @@ When we are logged in, at the bottom of the single recipe view, we have the opti
 The deletion is preceded by a modal in which we can withdraw from the decision.
 In general - recipe can be only upvoted (positive feedback), there is no negative impact on recipe, can be only neutral.
 
-![](static\images\readme\single_recipe.jpg)
+![](static/images/readme/single_recipe.jpg)
 
 To add a new recipe you must be logged in.
 
@@ -95,7 +95,7 @@ If so it activates the options `ADD RECIPE` in navbar, which leads to the form w
 After adding the recipe, it appears in the list on the user's profile page and completes the database.
 Editing an existing recipe displays the same page as adding a recipe, however the fields are already filled out and we can edit them.
 
-![](static\images\readme\add_update_recipe.jpg)
+![](static/images/readme/add_update_recipe.jpg)
 
 The `Graphs Page` page (lighting bolt like icon in navigator) allows us to read the statistics of the recipes for distribution by the author, category or kitchen - `yellow buttons`.
 
