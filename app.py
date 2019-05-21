@@ -11,7 +11,6 @@ from operator import itemgetter
 
 
 app = Flask(__name__)
-# app._static_folder = "static/images"
 
 # MongoDB config
 app.config['MONGO_URI'] = os.environ.get("MONGO_URI")
@@ -81,7 +80,7 @@ def get_recipes():
             viewer = user_in_db['username']
 
     # Pagination
-        # Request the limit from link
+    # Request the limit from link
     p_limit = int(request.args['limit'])
 
     # Request the offset from link
@@ -129,6 +128,7 @@ def view_recipe(recipe_id):
                               "$set": {'views': views}})
     upvotes_who = list(recipe['upvotes_who'])
 
+    # keep info for jinja login in template to allow upvote or not
     if viewer in upvotes_who:
         voted_up_by_viewer = True
     else:
@@ -137,17 +137,21 @@ def view_recipe(recipe_id):
     # adjust youtube link to allow to be embeded on page
     keySentence1 = "youtu.be/"  # youtuube link from android app
     keySentence2 = "watch?v="  # youtube link from web browser
-    leftPartOfLink = "https://www.youtube.com/embed/"  # left part of velid link
-    # create rught part of link
+    leftPartOfLink = "https://www.youtube.com/embed/"  # left part of valid link
 
+    # create right part of link
     def substring_after(youtubeLink, delim, delim1, many):
         if delim in youtubeLink:
+            # youtuube link from android app
             after = youtubeLink.partition(delim)[2]
             return str(leftPartOfLink + (after[:many]))
         elif delim1 in youtubeLink:
+            # youtube link from web browser
             after = youtubeLink.partition(delim1)[2]
             return str(leftPartOfLink + (after[:many]))
         else:
+            # if cannot find keySentence1 or keySentence2 in link provided (probably invalid yoytube link)
+            # do not display video in template
             return None
 
     recipe_video = substring_after(
@@ -178,8 +182,6 @@ def vote_up(recipe_id, viewer):
     recipes_collection.update({'_id': ObjectId(recipe_id)}, {
                               "$set": {'upvotes': recipe_upvotes, 'upvotes_who': upvotes_who}})
 
-# TO DO remake form username to user_id
-    # update viewers document upvoted_recipes
     users_collection.update({'username': viewer}, {
                             "$push": {'upvoted_recipes': recipe_id}})
 
@@ -327,6 +329,7 @@ def search_recipes():
 
             global searchedRecipes
             searchedRecipes = []
+            # options i for case insensitive
             searchedRecipes = list(recipes_collection.find({"$and": [{'meal': {'$regex': inMealWord, '$options': 'i'}}, {
                                    'ingredients': {'$regex': inIngredWord, '$options': 'i'}}]}))
             p_offset = 0
@@ -415,14 +418,12 @@ def insert_recipe():
     # split ingredients to create list
     form_request_to_dict['ingredients'] = form_request_to_dict['ingredients'].split(
         ",")
-    # add keys to dictionary to be used when searching and sorting
+    # add extra keys to dictionary
     form_request_to_dict['views'] = 0
     form_request_to_dict['upvotes'] = 0
     form_request_to_dict['upvotes_who'] = []
     # add Author manually as doesnt transfer from form when disabled
     form_request_to_dict['author'] = session['user']
-
-    pp.pprint(form_request_to_dict)
 
     recipes = recipes_collection
     recipes.insert_one(form_request_to_dict)
@@ -434,7 +435,7 @@ def insert_recipe():
 
 @app.route('/editRecipe/<recipe_id>')
 def edit_recipe(recipe_id):
-            # Check if user is logged in
+    # Check if user is logged in
     if 'user' in session:
         user_in_db = users_collection.find_one({"username": session['user']})
         if user_in_db:
@@ -450,6 +451,7 @@ def edit_recipe(recipe_id):
                 global upvotes_who_global
                 upvotes_who_global = list(the_recipe['upvotes_who'])
 
+                
                 ingredients_list_to_string = (
                     ','.join(the_recipe['ingredients']))
 
@@ -749,9 +751,11 @@ def chart_complex():
         counts = []
 
         for y in factor_y_list:
+            # for each factor_x_list member create list of count of each factor_y_list member
             count = recipes_collection.find(
                 {"$and": [{factor_x: x}, {factor_y: y}]}).count()
             counts.append(count)
+        # eg output > Basia [6, 1, 8, 9, 4, 1, 1, 1, 4, 0, 0, 0, 5]    
         print(x, counts)
         line_chart.add(x, counts)
 
